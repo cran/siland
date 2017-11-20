@@ -1,0 +1,16 @@
+5a8b6d1cec0cea3bb5d46b89214075c7 *DESCRIPTION
+b234ee4d69f5fce4486a80fdaf4a4263 *LICENSE
+d357927fbb84a7a742860efb50a0b7b6 *NAMESPACE
+75c61552f7cbd7bb93dbeae0290c6440 *R/miscsiland.R
+fdd4f2a122573019206bf975d0ab1ceb *R/siland.R
+34f26759e683a4dbcaf273442b10071d *build/partial.rdb
+9098d9d6208d821a49daf6f0885f9bd3 *data/dataSiland.RData
+30f7788e73001e0a160a5c6d6682c42f *data/landSiland.RData
+d069c8f827cd1096248e2cff3510f3a9 *man/dataSiland.Rd
+a9354de9b18b2e14a091e26a328fadd8 *man/landSiland.Rd
+6b6aed60f2fddbd97c0d00bb26625395 *man/plotcontri.Rd
+fc80654e0b6968a41dd0e23d9b712470 *man/plotsiland.Rd
+189dc76b59ffe57c86b5e930677452a8 *man/print.siland.Rd
+3f81537fa08df8a3154f78f24b5c0c88 *man/siland-package.Rd
+cebf255623a1cb6fdcdc381bb7018519 *man/siland.Rd
+176debf97551648c966f9f24cc1fc680 *man/summary.siland.Rd
