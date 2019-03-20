@@ -94,6 +94,7 @@ siland<-function(loc.model,land=NULL,data,initSIF=NULL,sif="exponential",family=
   
   if(modelType=="GLM")
   {
+    
     myfun=function(d)
     {
     return(silandMinusLoglik(d,data=data,land=land,formula=formul,sif=sif,family=family))
@@ -117,14 +118,18 @@ siland<-function(loc.model,land=NULL,data,initSIF=NULL,sif="exponential",family=
   if(length(land)>1)
   {
     #resoptim=optim(initSIF,myfun,lower=rep(0,length(land)),method="L-BFGS-B")
+    options(warn=-1)
     resoptim=optim(initSIF,myfun)
+    options(warn=0)
   }
   
   if(length(land)==1)
   {
     #resoptim=optimize(myfun,interval=c(0,300000))
     #resoptim$par=resoptim$minimum
-	resoptim=optim(initSIF,myfun)
+    options(warn=-1)
+	resoptim=optim(initSIF,myfun,method="Brent",lower=1,upper=30000)
+	options(warn=0)
   }
   
   paramSIF=resoptim$par
@@ -132,7 +137,8 @@ siland<-function(loc.model,land=NULL,data,initSIF=NULL,sif="exponential",family=
   landcontri=calcscontri(distmoy=paramSIF,Dist,sif=sif,idland=NULL,idobs=NULL,w=w)
   colnames(landcontri)=namesland
   
-  newdata=cbind(data,landcontri)   
+  newdata=cbind(data,landcontri) 
+  
   if(modelType=="GLM")
     restmp=glm(formul,data=newdata,family=family ) 
   if(modelType=="LMM")
@@ -140,7 +146,9 @@ siland<-function(loc.model,land=NULL,data,initSIF=NULL,sif="exponential",family=
   if(modelType=="GLMM")
     restmp=glmer(formul,data=newdata,family=family ) 
   
+  
   fit=predict(restmp)
+  err=residuals(restmp)
   loglik=as.vector(logLik(restmp))
   sd.error=NA
   if(family$family=="gaussian" & modelType=="GLM")
@@ -251,7 +259,7 @@ siland<-function(loc.model,land=NULL,data,initSIF=NULL,sif="exponential",family=
   
   ressiland=list(coefficients=resestim,loc.model=loc.model,landcontri=landcontri,loglik=loglik,loglik0=loglik0,fitted=fit,
                  sif=sif,resoptim=resoptim,AIC=AIC,AIC0=AIC0, nparam=nparam,pval0=pval0,pval=pval,family=family,
-                 sd.error=sd.error,modelType=modelType,rand.StdDev=rand.StdDev,nparam=nparam)
+                 sd.error=sd.error,modelType=modelType,rand.StdDev=rand.StdDev,nparam=nparam,err=err)
   attr(ressiland,"class") <- "siland" 
   return(ressiland)
 }

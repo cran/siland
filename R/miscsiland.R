@@ -38,6 +38,7 @@ print.siland<-function(x,...){
   cat(x$sd.error)
   cat("\t(No landscape effect) p-value: ")
   if(x$pval0==0) cat("<1e-16") else cat(x$pval0) 
+  cat("\n")
 }
 
 #print<-function(x,...){
@@ -59,11 +60,11 @@ x<-object
   if(!is.null(x$pval))
   {
     l=length(x$pval)
-    respval=round(x$pval,5)
-    respval[x$pval==0]="<1e-16"
+    #respval=round(x$pval,5)
+   
     
     cat("Coefficients:\n")
-    print(x$coefficients)
+    print(round(x$coefficients,4))
     
     if(x$modelType=="LMM" ||x$modelType=="GLMM")
     {
@@ -73,12 +74,13 @@ x<-object
     }
     cat("\n")
     cat("pvalue (L.R. Test):\n")
-    print(respval,quote=F)
+x$pval[x$pval==0]=1e-16
+    print(signif(x$pval,4))
     cat("\n")
     cat(paste("AIC: ",round(x$AIC,2), "\t", "AIC (no landscape): ",round(x$AIC0,2),sep=""))
     cat("\n")
     cat("(No landscape effect) p-value: ")
-    if(x$pval0==0) cat("<1e-16") else cat(x$pval0)
+    if(x$pval0 < 1e-16) cat("<1e-16") else cat(x$pval0)
   }
   else
   {
@@ -94,7 +96,7 @@ x<-object
     cat(paste("AIC: ",round(x$AIC,2), "\t", "AIC (no landscape): ",round(x$AIC0,2),sep=""))
     cat("\n")
     cat("(No landscape effect) p-value: ")
-    if(x$pval0==0) cat("<1e-16") else cat(x$pval0)
+    if(x$pval0< 1e-16) cat("<1e-16") else cat(x$pval0)
   }
 }
 
@@ -167,6 +169,7 @@ calcscontri=function(distmoy,Distobs,idland=NULL,idobs=NULL,w=1,sif="exponential
 
 silandMinusLoglik<-function(d,data,land,formula,sif,family)
 {
+  options(warn=-1)
   #compute the minus loglikelihood for parameter  
   # of fis fucntion, that is the mean distance
   #data are local observations
@@ -189,12 +192,13 @@ silandMinusLoglik<-function(d,data,land,formula,sif,family)
     mloglik= 10^6
   else  
     mloglik=as.numeric(-logLik(rr))
-  
+  options(warn=0)
   invisible(return(mloglik))
 }
 
 silandMinusLoglikLMM<-function(d,data,land,formula,sif,family)
 {
+  options(warn=-1)
   #compute the minus loglikelihood for parameter  
   # of fis fucntion, that is the mean distance
   #data are local observations
@@ -218,11 +222,14 @@ silandMinusLoglikLMM<-function(d,data,land,formula,sif,family)
   else  
     mloglik=as.numeric(-logLik(rr))
   
+  options(warn=0)
+  
   invisible(return(mloglik))
 }
 
 silandMinusLoglikGLMM<-function(d,data,land,formula,sif,family)
 {
+  options(warn=-1)
   #compute the minus loglikelihood for parameter  
   # of fis fucntion, that is the mean distance
   #data are local observations
@@ -245,7 +252,7 @@ silandMinusLoglikGLMM<-function(d,data,land,formula,sif,family)
     mloglik= 10^6
   else  
     mloglik=as.numeric(-logLik(rr))
-  
+  options(warn=0)
   invisible(return(mloglik))
 }
 
@@ -299,7 +306,7 @@ fdispRU=function(r,dmoy){
 }
 
 
-quantileE=function(q=0.9,dm,l=2000)
+quantileE=function(q=0.9,dm,l=3000)
 {  
   #Find quantile for radius distribution for exponential fis
   vv=seq(0,4*dm,length=l)
@@ -317,7 +324,7 @@ quantileE=function(q=0.9,dm,l=2000)
   }
 }
 
-quantileG=function(q=0.9,dm,l=2000)
+quantileG=function(q=0.9,dm,l=3000)
 { 
   #Find quantile for radius distribution for gaussian fis
   vv=seq(0,4*dm,length=l)
@@ -335,7 +342,7 @@ quantileG=function(q=0.9,dm,l=2000)
   }
 }
 
-quantileU=function(dm,q=0.9,l=2000)
+quantileU=function(dm,q=0.9,l=3000)
 {  
   #Find quantile for radius distribution for uniform fis
   vv=seq(0,5*dm,length=l)
@@ -427,15 +434,22 @@ plotcontri<-function(res,land,data,type=0,numvar=NULL)
     #compute local contribution
     v=as.character(as.formula(res$loc.model)[[3]])
     localname=v[!(v=="+")]
+    Contrilocal=NULL
+    if(localname!="1")
+    {
     coefloc=matrix(rep(res$coefficients[localname],nobs),byrow=T,nrow=nobs)
     Contrilocal=data[,localname]*coefloc
     colnames(Contrilocal)=localname
+    }
+    
     #All contributions
     contri=cbind(Contrilocal,Contrilandscape)
-    Sumcontrilocal=apply(Contrilocal,2,sum)
+    Sumcontrilocal=NULL
+    if(localname!="1") Sumcontrilocal=apply(Contrilocal,2,sum)
     Sumcontriland=apply(Contrilandscape,2,sum)
     Sumcontri=cbind(Sumcontrilocal,Sumcontriland)
-    allname=c(localname,landname)
+    allname=landname
+    if(localname!="1") allname=c(localname,landname)
     
     #Color graduation max and min
     #mmin=min(min(Sumlandscpe),min(Sumlocal))
@@ -470,19 +484,25 @@ plotcontri<-function(res,land,data,type=0,numvar=NULL)
   if(type==0 & is.null(numvar))
   {
     #plot for local contribution
+    if(!is.null(Contrilocal))
+    {
     for (i in 1:ncol(Contrilocal))
       { 
       print(paste("local:",localname[i]))
       plot(data[,pp],pch=16,col=Mcolor[,i],main=paste(localname[i],": local contribution"),xlim=c(minx,maxx),ylim=c(miny,maxy),cex=cexo)
       leg.col(col.gamme, scale.col.gamme )
       readline(prompt = "Press Enter for the next graphic:\n")
-      }
+    }
+    }
     #plot for landscape contribution
     for (i in 1:ncol(Contrilandscape))
       {
       print(paste("spatial:",landname[i]))
       plot(land[[i]][,pp],col=grey(0.8),pch=16,xlim=c(minx,maxx),ylim=c(miny,maxy),main=paste(landname[i],": spatial contribution"),cex=cexl)
-      points(data[,pp],pch=16,col=Mcolor[,i+ncol(Contrilocal)],cex=cexo)
+      if(!is.null(Contrilocal))
+        points(data[,pp],pch=16,col=Mcolor[,i+ncol(Contrilocal)],cex=cexo)
+      else
+        points(data[,pp],pch=16,col=Mcolor[,i],cex=cexo)
       leg.col(col.gamme, scale.col.gamme)
       readline(prompt = "Press Enter for the next graphic:\n")
     }  
@@ -490,7 +510,8 @@ plotcontri<-function(res,land,data,type=0,numvar=NULL)
   
   #plot for local contribution minus spatial contriibution
   if(type==1& is.null(numvar))
-    {      
+    {  
+    if(localname=="1") stop("No local variable in the model")
     #diffcontri=as.vector(Sumcontri[,1]-Sumcontri[,2])
     diffcontri=as.vector(abs(Sumcontri[,2])/(abs(Sumcontri[,1])+abs(Sumcontri[,2])))
     diffcontri<<-diffcontri  
@@ -550,9 +571,9 @@ plotcontri<-function(res,land,data,type=0,numvar=NULL)
 #
 #####################
 
-plotsiland<-function(res,land,data)
+plotsilandold<-function(res,land,data)
 {  
-  q=0.95
+  q=0.9
   def.par <- par(no.readonly = TRUE)
   nf <- layout(matrix(c(2,0,1,3),2,2,byrow = TRUE), c(0.8,0.2), c(0.2,0.8), TRUE)
   layout.show(nf)

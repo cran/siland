@@ -22,7 +22,7 @@ the landscape associated to the estimation res
 the observations associated to the estimation res
 }
   \item{type}{
-type of plot, 1 or 2. For type equal to 0 (by default), a graphic for each local and landscape variable is displayed. For type equal to 1, the rate of landscape with local contribtions is displayed.
+type of plot, 0 or 1. For type equal to 0 (by default), a graphic for each local and landscape variable is displayed. For type equal to 1, the rate of landscape with local contribtions is displayed.
 }
   \item{numvar}{
   a number indicating the variable that has to be displayed. If NULL (by default), graphics are displayed following the argument type.
@@ -33,14 +33,15 @@ A local model with only continuous variables can be currently considered. The fu
 }
 
 \examples{
+\donttest{
 data(landSiland)
 data(dataSiland)
 res=siland(y~locvar,land=landSiland,data=dataSiland,sif="exponential",family=gaussian)
-\donttest{
 plotcontri(res,landSiland,dataSiland)
-}
+
 plotcontri(res,landSiland,dataSiland,type=1)
 plotcontri(res,landSiland,dataSiland,numvar=2)
+}
 }
 
 

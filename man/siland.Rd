@@ -28,7 +28,7 @@ a dataframe containing the response variable and the local variables.
 a vector indicating the starting values for the estimation of the mean distance of the spatial influence functions. The length of initSIF has to be equal to the length of list land. By default, initialisation is equal to 100 for each landscape variable.
 }
   \item{sif}{
-the family of the spatial influence function. sif can be "exponential", "gaussian" or "uniform". 
+the family of the spatial influence function. sif can be "exponential" or "gaussian". 
 }
   \item{family}{
 the distribution of response variable. family can be "gaussian", "poisson" or "binomial" and the associated link function are identity, log and logit respectively.
@@ -66,6 +66,7 @@ siland returns an object of type list.
 \item{model.Type}{type of local model: GLM for generalised model, LMM for linear mixed model or GLMM for generalised linear mixed model}
 \item{rand.StdDev}{standard deviation of random effects for LMM or GLMM}
 \item{nparam}{number of model parameters}
+\item{err}{estimated residuals}
 
 }
 
@@ -82,7 +83,7 @@ Chandler R. and Hepinstall-Cymerman J. (2016) Estimating the spatial scales of l
 \donttest{
 data(dataSiland)
 data(landSiland)
-resE=siland(y~locvar,land=landSiland,data=dataSiland,sif="exponential",family=gaussian)
+resE=siland(y~locvar,land=landSiland,data=dataSiland,sif="exponential",family=poisson)
 resE
 resE$AIC
 }

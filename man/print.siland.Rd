@@ -2,10 +2,10 @@
 \alias{print.siland}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-print for an object of class siland
+print an object of class siland
 }
 \description{
-The function print an object of class siland. It gives the model used and the  estimated parameters
+The function print an object of class siland. It gives the model used and the  estimated parameters.
 }
 
 \usage{
