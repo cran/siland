@@ -2,30 +2,32 @@
 \alias{landSiland}
 \docType{data}
 \title{
-A list of simulated data sets that describes landscape.
+A landscape with two landscape variables.
 }
 \description{
-Each component of the list is a dataframe that correponds to a landscape variable. For each data set, the columns X and Y indicate the locations of the different "pixels".
+A landscape with two landscape variables, named L1 and L2.
 }
 \usage{data("landSiland")}
 \format{
-  The format is:
-List of 2
- $ L1:'data.frame':	12243 obs. of  2 variables:
-  ..$ X: num [1:12243] 1075.98 1119.021 1162.06 1205.09 1248.138 ...
-  ..$ Y: num [1:12243] 7988.14 7988.14 7988.14 7988.14 7988.14 ...
- $ L2:'data.frame':	2721 obs. of  2 variables:
-  ..$ X: num [1:3615] 903.82 946.86 989.90 1032.94 3787.45 ...
-  ..$ Y: num [1:3615] 7988.14 7988.14 7988.14 7988.14 7988.14 ...
+  A data frame with 4884 observations on the following 3 variables.
+  \describe{
+   
+    \item{\code{geometry}}{a sfc_MULTIPOLYGON}
+    \item{\code{L1}}{a numeric vector for landscape variable L1}
+    \item{\code{L2}}{a numeric vector for landscape variable L2}
+  }
 }
 
-\note{The landscape has been obtained by a simualtion. Names of the two landscape variables are L1 and L2.}
 
 \examples{
+\donttest{
 data(landSiland)
-names(landSiland)
-#locations for the two landscape variables b1 and b2
-plot(landSiland[[1]],col=2,pch=".")
-points(landSiland[[2]],col=3,pch=".")
+plot(landSiland$geometry)
+plot(landSiland[landSiland$L1==1,]$geometry,col=2,add=T)
+plot(landSiland[landSiland$L2==1,]$geometry,col=3,add=T)
+
+
+
+}
 }
 \keyword{datasets}
