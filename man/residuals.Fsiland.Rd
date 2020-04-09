@@ -2,10 +2,10 @@
 \alias{residuals.Fsiland}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Residuals for Fsiland
+Extract Fsiland Residuals 
 }
 \description{
-Compute residuals 
+Function extracting residuals for an estimated Bsiland model.
 }
 
 \usage{

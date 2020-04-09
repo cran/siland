@@ -2,10 +2,10 @@
 \alias{fitted.Bsiland}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Compute fiited values
+Extract Bsiland model Fitted values
 }
 \description{
-Compute fiited values for an object of class Bsiland
+Function extracting fitted values of an object of class Bsiland.
 }
 
 \usage{
@@ -17,12 +17,12 @@ Compute fiited values for an object of class Bsiland
 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{object}{ an object of class Bsiland}
-\item{\dots}{Dots are not take into account in this version}
+  \item{object}{ an object of class Bsiland.}
+  \item{\dots }{ Dots are not take into account in this version}
 }
 
 \value{
-Returns the fitted values.
+Fitted values extracted from the object \command{object}.
 }
 
 \author{

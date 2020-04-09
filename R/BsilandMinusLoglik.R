@@ -5,21 +5,21 @@ BsilandMinusLoglik<-function(d,data,loc.sf,landnames,sfGIS,formula,family,border
   #data is a liost
   #loc.sf is a list
   #sfGIS is a list
-  
+
   for(i in 1:length(d))
   {
-    if(d[i]<0 ) 
+    if(d[i]<0 )
     {
       mloglik=10^6
       return(mloglik)
     }
-    if(d[i]>2000 ) 
-    {
-      mloglik=10^6
-      return(mloglik)
-    }
+   # if(d[i]>7000 )
+  #  {
+  #    mloglik=10^6
+  #    return(mloglik)
+  #  }
   }
-  
+
   matB=list(NULL)
   newdata=NULL
   for(i in 1:length(loc.sf))
@@ -29,12 +29,12 @@ BsilandMinusLoglik<-function(d,data,loc.sf,landnames,sfGIS,formula,family,border
   }
   colnames(newdata)=c(colnames(data[[1]]),landnames)
   resout=glm(formula,data=newdata,family=family)
-  
+
   #if( inherits(rr <- try(glm(formula,data=newdata,family=family), silent = TRUE), "try-error"))
   #  mloglik= 10^6
-  #else  
+  #else
     mloglik=as.numeric(-logLik(resout))
-  options(warn=0)
+  #options(warn=0)
   invisible(return(mloglik))
 }
 

@@ -2,10 +2,10 @@
 \alias{plotBsiland.land}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Spatial representation of the estimated buffers
+Map of Bsiland result
 }
 \description{
-The function gives a spatial representation of buffer for the different variables. Representation can be done for each variable in the estimated model.
+Function creating a map of Bsiland result, i.e. buffers estimations for each landscape variable.
 }
 \usage{
 plotBsiland.land(x, land, data, var = 1,landviz=F )
@@ -13,27 +13,26 @@ plotBsiland.land(x, land, data, var = 1,landviz=F )
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-an object of class Bsiland obtained with function Bsiland()
+an object resulting from  \command{Bsiland}
 }
   \item{land}{
-an object of class sf that gives the landscape variables for observations.
+the object of class sf describing the landscape variable, i.e. the \command{land} argument in the call to the \command{Bsiland} function that computed \command{x}
 }
   \item{data}{
-a dataframe containing the response variable and the local variables. The dataframe must be the same than the 
-one used to obtain the object x.
+the dataframe describing response variable and the local variables, i.e. the  \command{data} argument in the call to the Bsiland function that computed \command{x}.
 }
   \item{var}{
-a numeric value that gives the landscape variable for the spatial representation. 
+  a vector containing the numbers (numeric) of the mapped landscape variables.
 }
   \item{landviz}{
-If landviz=T (by default), polygons where variable var is observed are colored in gray.
+If landviz=T (by default), polygons where the variable \command{var} is observed are colored in gray.
 }
 
 
 }
 
 \value{
-an object of class ggplot
+a ggplot of class of the landscape effect estimated in the \command{Bsiland} object x i.e. a map of buffers.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
@@ -42,14 +41,15 @@ an object of class ggplot
 Bsiland
 }
 \examples{
-\donttest{
+%\donttest{
 data(dataSiland)
 data(landSiland)
-resE=Fsiland(y~locvar,land=landSiland,data=dataSiland,sif="exponential",family=gaussian)
-
-plotFsiland.land(x=resE,land=landSiland,data=dataSiland)
-plotFsiland.land(x=resE,land=landSiland,data=dataSiland,var=1,lw=20)
-}
+data(resB1)
+#resB1 has been pre-computed and is the result from the following command
+#resB1=Bsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland)
+plotBsiland.land(x=resB1,land=landSiland,data=dataSiland)
+plotBsiland.land(x=resB1,land=landSiland,data=dataSiland,var=2)
+%}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -2,11 +2,10 @@
 \alias{Fsiland.lik}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Compute -(Log-likelihood) for models with different parameters for spatial influence functions.
+-(Loglikelihood) as a function of SIF parameters.
 }
 \description{
-This function allows to investigate some problem optimization for function Fsiland by plotting the -(log-likelihhod) 
-for models with different parameters for spatial influence functions for landscape variables.
+Function investigating eventual optimization problems during numerical optimization of function Fsiland by plotting the -(loglikelihhod) against parameters of Spatial Influence Functions (SIF) of each landscape variable. The parameter of a SIF is defined as the mean distance of SIF.
 
 }
 \usage{
@@ -15,29 +14,32 @@ Fsiland.lik(res, land,data, varnames = NULL, seqd = seq(2, 2000, length = 10))
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{res}{
-an object from Fsiland estimation
+an object resulting from Fsiland
 }
  \item{land}{
-The landscape (a sf object) used to obtain the result res
+the object of class sf describing the landscape variable, i.e. the  \command{land}" argument in the call to the Fsiland function that computed \command{res}.
 }
   \item{data}{
-the dataframe used to obtain the result res
+the dataframe describing response variable and the local variables, i.e. the  \command{data} argument in the call to the Fsiland function that computed \command{res}.
 }
- 
+
   \item{varnames}{
-landscape variables for which -(log-likelihhod) is studied. If varnames is null (by default), -(log-likelihhod) is investigated for 
-all landscape variables in estimted model for object res.
+a vector containing the names (characters) of studied landscape variables. If varnames is \command{NULL} (by default), all landscape variables of the \command{res} model are considered.
 }
   \item{seqd}{
-a vector of positives values that represent different buffer sizes for the landscape variables.
+a vector of SIF parameters (positive values) for which the -loglikelihood is computed.
 }
 }
 \details{
-Estimation based on log-likelihood aims to find parameters that maximises log-likelihood, that is to say 
-that minimses -(log-likelihood). From graphics obtained with this fucntion, orange curve gives 
-the -(log-likelihood) obtained for the estimatd model. Others curves gives -(log-likelihood) by varying 
-buffer sizes for landscape variables. If minimisation for -(log-likelihood) for estimation 
-given in object res, no curve should go below the ornage one.
+As with all numerical maximisation procedures, optimization problems may arise. The function \command{Fsiland.lik} allows to point out possible problems of optimization.
+
+\command{Fsiland.lik} plots the -Loglikelihood against SIF parameters. During the Fsiland procedure, the estimation of SIF parameters is made by maximazing the likelihood i.e. by minimizing the -Loglikelihood. The orange horizontal line indicates the minimal value of -Loglikelihood obtained during the estimation (\command{res} result).
+The other continous curves represent the -loglikehood as a function of SIF parameters for each studied landscape variable (considering the other parameters of the model at their estimated value in \command{res}). The dotted lines indicate the values of SIF parameter estimated (\command{res} result).
+
+When the minization correctly occurs, the minimal values of the -loglikelihoods for each landscape variable are equal to the value of the estimated minimal -Loglikelihood. This means that the value of each continuous curves is minimal at its intersection with the orange horizontal line. This also means that dotted lines intersect their associated continuous lines at their minimum.
+
+If it is not the case, the minimizing procedure has failed and it is necessary to proceed again with an estimation with different initialisation values. This is possible with the argument \command{init} in function  \command{Fsiland}.
+
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
@@ -46,8 +48,7 @@ given in object res, no curve should go below the ornage one.
 %%  \item{comp1 }{Description of 'comp1'}
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
-A matrix with -(log-likelihood) values for the different landscape variables (argument varnames) and for the different buffer sizes (argument seqd).
-
+a ggplot of the -(loglikelihhod) against SIF parameters of each landscape variables.
 }
 
 \author{
@@ -59,12 +60,24 @@ O. Martin and F. Carpentier
 
 
 \examples{
-\donttest{
+%\donttest{
 data(dataSiland)
 data(landSiland)
-resF=Fsiland(obs~x1+L1+L2,data=dataSiland,land=landSiland,init = c(50),wd=20)
-Fsiland.lik(resF,dataSiland,land=landSiland,varnames=c("L1","L2"),seqd=seq(5,500,length=20))
-}
+data(resF1)
+#resF1 has been pre-computed and is the result from the following command
+#resF1=Fsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland,sif="exponential")
+
+Fsiland.lik(resF1,dataSiland,land=landSiland,varnames=c("L1","L2"),seqd=seq(20,300,length=6))
+
+# Illustration of failed estimation caused by wrong initial
+# values (chosen initial values that are deliberately and obviously far too high)
+# In a such case, the estimation should be done again ,
+# by  calling Fsiland with init=c(250,250) for instance.
+
+#resF2=Fsiland(obs~x1+L1+L2,data=dataSiland,land=landSiland,init=c(20000,20000),wd=100)
+#Fsiland.lik(resF2,dataSiland,land=landSiland,varnames=c("L1","L2"),seqd=seq(1e9,1e10,length=20))
+
+%}
 }
 
 

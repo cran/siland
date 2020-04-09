@@ -5,7 +5,7 @@
 Akaike's An Information Criterion for siland package
 }
 \description{
-The function gives the Akaike's 'An Information Criterion' for an object of class Fsiland.
+Function calculating thue usual Akaike's 'An Information Criterion' for an object of class Fsiland, according to the formula -2*loglikelihood+k*npar, with npar the number of parameters of the model and k = 2.
 }
 
 \usage{

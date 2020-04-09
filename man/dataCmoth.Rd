@@ -2,24 +2,25 @@
 \alias{dataCmoth}
 \docType{data}
 \title{
-Data set for codling moth counts
+Codling moth counts
 }
 \description{
-The dataframe dataCmoth gives measurements for codling moth 
-counts in 54 orchards. X and Y give the locations for observed data. The number Cmoth is the count of collected
- larvae in cardborad traps wrapped around tree trunks. trait is a local variable that gives the number of traitements for codling moth in the orchard.
-
+This data set contains measurements of codling moth counts in 54 orchards. Anonymized data issued from Ricci et al. (2011) study.
 }
+
 \usage{data("dataCmoth")}
 \format{
-  A data frame with 54 observations on the following 4 variables.
-  \describe{
-    \item{\code{X}}{a numeric vector}
-    \item{\code{Y}}{a numeric vector}
-    \item{\code{trait}}{a numeric vector}
-    \item{\code{Cmoth}}{a numeric vector}
+  A data frame with 54 observations on 4 variables.
+
+
+\tabular{rlll}{
+    [,1] \tab X   \tab numeric \tab locations (anonymized) \cr
+    [,2] \tab Y \tab numeric \tab locations (anonymized)\cr
+    [,3] \tab trait    \tab numeric \tab number of treatments against codling moths in orchards\cr
+    [,4] \tab Cmoth    \tab numeric \tab average count of collected larvae in cardboard traps wrapped around tree trunks.
   }
 }
+
 
 \references{
 Ricci B., Franck P., Bouvier J.-C., Casado D. and Lavigne C. (2011). Effects of hedgerow characteristics on intra-orchard distribution of larval codling moth. Agriculture, Ecosystems & Environment. 140. 395-400. 10.1016/j.agee.2011.01.001. 

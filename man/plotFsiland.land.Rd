@@ -2,38 +2,40 @@
 \alias{plotFsiland.land}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Spatial representation of the landscape influence
+Map of Fsiland result
 }
 \description{
-The function gives a spatial representation of landscape influence for the different variables. Representation can be done for each variable, or for the cumulative effects of all variables.
+Function creating a map of Fsiland result, i.e. estimatied spatial influence of each landscape variable or for the cumulative effect of all variables.
 }
 \usage{
-plotFsiland.land(x, land, data, var = 0, lw = 100, xlim=NULL, ylim=NULL)
+plotFsiland.land(x, land, data, var = 0, lw = 100, xlim=NULL, ylim=NULL,plot=T)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-an object of class Fsiland obtained with fucntion Fsiland()
+an object resulting from  \command{Fsiland}
 }
   \item{land}{
-an object oc class sf that gives the landscape variables for observations.
+the object of class sf describing the landscape variable, i.e. the \command{land} argument in the call to the \command{Fsiland} function that computed \command{x}
 }
   \item{data}{
-a dataframe containing the response variable and the local variables. The dataframe must be the same than the 
-one used to obtain the object x.
+the dataframe describing response variable and the local variables, i.e. the  \command{data} argument in the call to the Fsiland function that computed \command{x}.
 }
   \item{var}{
-a numeric value that gives the landscape variable for the spatial representation. If var=0 (by default), the  
-representation gives the cumulative effects for all landscape variables.
+ a vector containing the numbers (numeric) of the mapped landscape variables. If \command{var=0} (by default), the cumulative effect of all landscape variables is represented.
 }
   \item{lw}{
 the number of pixels on x-axis and y-axis for the graphical representation. A too high value can lead to memory allocation problems. By default lw=100.
 }
 \item{xlim}{
-a vector of two numbers (min and max on x-aixs) to give a representation for a sub-region. By default, xlim=NULL.
+a length-2 numeric vector, lower and upper limits of x-axis.
 }
 \item{ylim}{
-a vector of two numbers (min and max on y-axis) to give a representation for a sub-region. By default, ylim=NULL.
+a length-2 numeric vector, lower and upper limits of y-axis.
+}
+
+\item{plot}{
+a logical (TRUE by default). If TRUE, the result is a graphic. If FALSE, the result is a dataframe of the	cumulative spatial influence of the landscape variable(s) var.
 }
 
 }
@@ -48,15 +50,19 @@ an object of class ggplot
 Fsiland
 }
 \examples{
-\donttest{
+%\donttest{
 data(dataSiland)
 data(landSiland)
-resE=Fsiland(y~locvar,land=landSiland,data=dataSiland,sif="exponential",family=gaussian)
+data(resF1)
+#resF1 has been pre-computed and is the result from the following command
+#resF1=Fsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland,sif="exponential")
+plotFsiland.land(x=resF1,land=landSiland,data=dataSiland,lw=20)
+plotFsiland.land(x=resF1,land=landSiland,data=dataSiland,var=1,lw=20)
+plotFsiland.land(x=resF1,land=landSiland,data=dataSiland,var=2,lw=20)
 
-plotFsiland.land(x=resE,land=landSiland,data=dataSiland)
-plotFsiland.land(x=resE,land=landSiland,data=dataSiland,var=1,lw=20)
+%}
 }
-}
+
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 %\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")

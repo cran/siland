@@ -1,26 +1,26 @@
 Bsiland.lik<-function(res,land,data,varnames=NULL,seqd=seq(2,2000,length=10))
 {
-  
+
   model=res$formula
-  if(res$modelType=="GLMM")
-    stop("This function don't take into account mixed effects")
-  if(res$modelType=="LMM")
-    stop("This function don't take into account mixed effects")
+  #if(res$modelType=="GLMM")
+  #  stop("This function don't take into account mixed effects")
+  #if(res$modelType=="LMM")
+  #  stop("This function don't take into account mixed effects")
   if(is.null(varnames))
     varnames=colnames(res$buffer)
-  
+
   seqd=sort(c(seqd,res$parambuffer))
-  
+
   if(class(land)[1]!="list")
     land=list(land)
   sfGIS=lapply(land,st_as_sf)
-  
+
   if(class(data)[1]!="list")
     data=list(data)
-  
+
   if(length(data)!=length(land))
     stop("The number of datasets for argument data have to be equal to the number of GIS objects for argument land")
-  
+
   loc.sf=list(NULL)
   for(i in 1:length(data))
   {
@@ -28,21 +28,21 @@ Bsiland.lik<-function(res,land,data,varnames=NULL,seqd=seq(2,2000,length=10))
     loc.sf[[i]]=st_as_sf(tmp,coords = c("X","Y"))
     st_crs(loc.sf[[i]])<-st_crs(sfGIS[[i]])$proj4string
   }
-  
+
   datanames<-names(data[[1]])
   landnames=names(sfGIS[[1]])
-  
+
   if(sum(varnames%in%landnames)<length(varnames))
     stop("Error: Some varnames are not variable in object land ")
   allvars=all.vars(model)
   vary=allvars[1]
-  
+
   #extract landscape variables
   localvars=allvars[allvars%in%datanames]
   landvars=allvars[allvars%in%landnames]
   if(is.null(varnames))
     varnames=landvars
-  
+
   nvars=length(varnames)
   matlik=matrix(0,nrow=nvars, ncol=length(seqd))
   selk= which(landvars %in% varnames)
@@ -72,17 +72,18 @@ Bsiland.lik<-function(res,land,data,varnames=NULL,seqd=seq(2,2000,length=10))
   colnames(matlik2)=c("Var1","Var2","value")
   linee=c("estimated model"=2)
   cols=c("estimated model"="darkorange")
-  
- 
+
+  mycolR=palette()
+
   pp=ggplot(matlik2, aes_string(x="Var2",y="value",group="Var1"))+geom_line(aes_string(color="Var1"))+
     xlab("Buffer radius")+ylab("- Log-likelihood")+
     theme(legend.position="top",legend.title=element_blank())+
-    geom_vline(xintercept=res$parambuffer[selk],color=1:nvars,lty=2)+
+    geom_vline(xintercept=res$parambuffer[selk],color=mycolR[1:nvars],lty=2)+
     geom_hline(yintercept=-res$loglik,lwd=1.5,color="darkorange")+
-    scale_color_manual(values=c(1:(nvars),"darkorange"))
+    scale_color_manual(values=c(mycolR[1:nvars],"darkorange"))
   #plot(pp)
-    
-  
+
+
   return(pp)
 }
 

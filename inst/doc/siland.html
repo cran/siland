@@ -1,451 +1,820 @@
 <!DOCTYPE html>
+
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<title>Introduction</title>
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<script type="text/javascript">
-window.onload = function() {
-  var imgs = document.getElementsByTagName('img'), i, img;
-  for (i = 0; i < imgs.length; i++) {
-    img = imgs[i];
-    // center an image if it is the only element of its parent
-    if (img.parentElement.childElementCount === 1)
-      img.parentElement.style.textAlign = 'center';
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Florence Carpentier and Olivier Martin" />
+
+<meta name="date" content="2020-04-09" />
+
+<title>Siland: Spatial Influence of landscape</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
   }
-};
-</script>
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 
-<!-- Styles for R syntax highlighter -->
-<style type="text/css">
-   pre .operator,
-   pre .paren {
-     color: rgb(104, 118, 135)
-   }
-
-   pre .literal {
-     color: #990073
-   }
-
-   pre .number {
-     color: #099;
-   }
-
-   pre .comment {
-     color: #998;
-     font-style: italic
-   }
-
-   pre .keyword {
-     color: #900;
-     font-weight: bold
-   }
-
-   pre .identifier {
-     color: rgb(0, 0, 0);
-   }
-
-   pre .string {
-     color: #d14;
-   }
 </style>
-
-<!-- R syntax highlighter -->
-<script type="text/javascript">
-var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
-hljs.initHighlightingOnLoad();
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
 </script>
 
 
 
-<style type="text/css">
-body, td {
-   font-family: sans-serif;
-   background-color: white;
-   font-size: 13px;
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
 }
-
-body {
-  max-width: 800px;
-  margin: auto;
-  padding: 1em;
-  line-height: 20px;
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
 }
-
-tt, code, pre {
-   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
 }
-
-h1 {
-   font-size:2.2em;
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
 }
-
-h2 {
-   font-size:1.8em;
+#TOC ul ul {
+margin-left: -2em;
 }
-
-h3 {
-   font-size:1.4em;
+#TOC li {
+line-height: 16px;
 }
-
-h4 {
-   font-size:1.0em;
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
 }
-
-h5 {
-   font-size:0.9em;
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
 }
-
-h6 {
-   font-size:0.8em;
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
 }
-
-a:visited {
-   color: rgb(50%, 0%, 50%);
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
 }
-
-pre, img {
-  max-width: 100%;
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
 }
 pre {
-  overflow-x: auto;
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
 }
-pre code {
-   display: block; padding: 0.5em;
+pre:not([class]) {
+background-color: #f7f7f7;
 }
-
 code {
-  font-size: 92%;
-  border: 1px solid #ccc;
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
 }
-
-code[class] {
-  background-color: #F8F8F8;
+p > code, li > code {
+padding: 2px 0px;
 }
-
-table, td, th {
-  border: none;
+div.figure {
+text-align: center;
 }
-
-blockquote {
-   color:#666666;
-   margin:0;
-   padding-left: 1em;
-   border-left: 0.5em #EEE solid;
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
 }
-
-hr {
-   height: 0px;
-   border-bottom: none;
-   border-top-width: thin;
-   border-top-style: dotted;
-   border-top-color: #999999;
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
 }
-
-@media print {
-   * {
-      background: transparent !important;
-      color: black !important;
-      filter:none !important;
-      -ms-filter: none !important;
-   }
-
-   body {
-      font-size:12pt;
-      max-width:100%;
-   }
-
-   a, a:visited {
-      text-decoration: underline;
-   }
-
-   hr {
-      visibility: hidden;
-      page-break-before: always;
-   }
-
-   pre, blockquote {
-      padding-right: 1em;
-      page-break-inside: avoid;
-   }
-
-   tr, img {
-      page-break-inside: avoid;
-   }
-
-   img {
-      max-width: 100% !important;
-   }
-
-   @page :left {
-      margin: 15mm 20mm 15mm 10mm;
-   }
-
-   @page :right {
-      margin: 15mm 10mm 15mm 20mm;
-   }
-
-   p, h2, h3 {
-      orphans: 3; widows: 3;
-   }
-
-   h2, h3 {
-      page-break-after: avoid;
-   }
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
 }
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
+
 
 
 
 </head>
 
 <body>
+
+
+
+
+<h1 class="title toc-ignore">Siland: Spatial Influence of landscape</h1>
+<h4 class="author">Florence Carpentier and Olivier Martin</h4>
+<h4 class="date">2020-04-09</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#a-first-example">A first example</a><ul>
+<li><a href="#data">Data</a></li>
+<li><a href="#buffer-approach-bsiland">Buffer approach : Bsiland()</a></li>
+<li><a href="#classical-disks-buffers-point-observations">Classical disks buffers (point observations)</a></li>
+<li><a href="#spatial-influence-function-approach-fsiland">Spatial Influence Function approach : Fsiland()</a></li>
+<li><a href="#comparison-between-fsiland-and-bsiland">Comparison between Fsiland() and Bsiland()</a></li>
+</ul></li>
+<li><a href="#model-extensions">Model extensions</a><ul>
+<li><a href="#mixed-model">Mixed model</a></li>
+<li><a href="#non-gaussian-model">Non gaussian model</a></li>
+<li><a href="#model-with-interaction-between-local-and-landscape-variables">Model with interaction between local and landscape variables</a></li>
+<li><a href="#multiyear-model-and-multisite-model">Multiyear model and multisite model</a></li>
+</ul></li>
+<li><a href="#remarks">Remarks</a></li>
+<li><a href="#further-developments">Further developments</a></li>
+</ul>
+</div>
+
+<div id="introduction" class="section level2">
 <h2>Introduction</h2>
-
-<p>The package <em>siland</em> aims to estimate the effects of landscape and local variables on a measurement of interest. 
-Two methods are available which enable to estimate effect intensities but also the scale of the effect for landscape variables, without any a priori. </p>
-
+<p>The package <em>siland</em> aims to estimate the effects of landscape and local variables on a measurement of interest. Two methods are available which enable to estimate effect intensities but also the scale of the effect for landscape variables, without any a priori.</p>
 <ul>
-<li><p>The first one is based on buffer computed around location of observed data (<code>Bsiland</code>). </p></li>
-<li><p>The second one (<code>Fsiland</code>) is based on estimation of Spatial Influence Function (SIF).The SIF function describes how the influence of a pixel/cell of a landscape variable is spatially distributed. We assume that the influence is maximal at the pixel location and decreases with the distance.  </p></li>
+<li><p>The first one is based on buffer computed around location of observed data (<code>Bsiland</code>).</p></li>
+<li><p>The second one (<code>Fsiland</code>) is based on estimation of Spatial Influence Function (SIF).The SIF function describes how the influence of a pixel/cell of a landscape variable is spatially distributed. We assume that the influence is maximal at the pixel location and decreases with the distance.</p></li>
 </ul>
-
 <p>It is worth noting that the both methods simultaneously estimate intensities of effect and scales of effect using a numerical likelihood maximisation procedure. This means that the buffers radii (Bsiland) or the mean distances of the SIFs (Fsiland) are not given by the user but estimated for each landscape variable.</p>
-
-<p><em>siland</em> package is designed to be a user-friendly tool: data format are commonly used (data.frame and shape files from GIS data), model expression is simple (classical formula as lm expression), various outputs are very easily computed: summary of estimates and tests, graphical maps of effects and graphical checking of likelihood maximisation. Based on linear model, it includes numerous extensions of linear model: interactions, random effects, GLM (binomial and poisson). It is also possible to build multiannual model. We detailed hereafter some examples of simple use of the <em>siland</em> package. (More details about the method can be find in <a href="https://www.biorxiv.org/content/10.1101/692566v1">https://www.biorxiv.org/content/10.1101/692566v1</a>. Package development on <a href="https://github.com/silandpackage/siland">https://github.com/silandpackage/siland</a>)</p>
-
+<p><em>siland</em> package is designed to be a user-friendly tool: data format are commonly used (data.frame and shape files from GIS data), model expression is simple (classical formula as lm expression), various outputs are very easily computed: summary of estimates and tests, graphical maps of effects and graphical checking of likelihood maximisation. Based on linear model, it includes numerous extensions of linear model: interactions, random effects, GLM (binomial and poisson). It is also possible to build multiannual model. We detailed hereafter some examples of simple use of the <em>siland</em> package. (More details about the method can be found in <a href="https://www.biorxiv.org/content/10.1101/692566v1" class="uri">https://www.biorxiv.org/content/10.1101/692566v1</a>. Package development on <a href="https://github.com/silandpackage/siland" class="uri">https://github.com/silandpackage/siland</a>)</p>
+</div>
+<div id="a-first-example" class="section level2">
 <h2>A first example</h2>
-
+<div id="data" class="section level3">
 <h3>Data</h3>
-
 <p><em>siland</em> package requires two data objects:</p>
-
 <ul>
-<li> <strong>data.frame of located observations</strong> . <em>Data locations</em> have to be indicated in <em>columns &ldquo;X&rdquo; and &ldquo;Y&rdquo;</em>. The variable of interest as possible local variables are also included here. </li>
-<li> <strong>sf object</strong> containing description of landscape variables. It can be created using the <code>st_read</code> function of the package <code>sf</code>. For instance if your GIS data (in shp format) are in the <em>FILE</em> file, named <em>NAME</em> (i.e.FILE contains NAME.shp, NAME.dbf,&hellip;), you can easily import your data in landdata using the command: </li>
+<li><strong>data.frame of located observations</strong> . <em>Data locations</em> have to be indicated in <em>columns “X” and “Y”</em>. The variable of interest as possible local variables are also included here.</li>
+<li><strong>sf object</strong> containing description of landscape variables. It can be created using the <code>st_read</code> function of the package <code>sf</code>. For instance if your GIS data (in shp format) are in the <em>FILE</em> file, named <em>NAME</em> (i.e.FILE contains NAME.shp, NAME.dbf,…), you can easily import your data in landdata using the command:</li>
 </ul>
-
-<pre><code class="r">landdata=st_read(dsn = &quot;FILE&quot;,layer=&quot;NAME&quot;)
-</code></pre>
-
-<p>Here, we use a toy example: the objects dataSiland and landSiland, included in <em>siland</em> package. You can load data using the <code>data</code> command. </p>
-
-<pre><code class="r">library(siland)
-data(dataSiland)
-data(landSiland)
-</code></pre>
-
-<p><em>dataSiland</em> is a data.frame with columns: &ldquo;obs&rdquo;, variable of interest and &ldquo;x1&rdquo; variable, a continuous local variable.
-The &ldquo;Id&rdquo; column gives the identification number of the plots where observations were made.
-<em>landSiland</em> is an object of class sf where landscape is characterised by two features named L1 and L2. Landscape is described by polygons.
-For each polygon, L1 is equal to 1 if the polygon is of type L1, 0 otherwise  (so is it for L2).   </p>
-
-<pre><code class="r">str(dataSiland)
-str(landSiland)
-</code></pre>
-
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">landdata=<span class="kw">st_read</span>(<span class="dt">dsn =</span> <span class="st">&quot;FILE&quot;</span>,<span class="dt">layer=</span><span class="st">&quot;NAME&quot;</span>)</a></code></pre></div>
+<p>Here, we use the objects dataSiland and landSiland, included in <em>siland</em> package. You can load data using the <code>data</code> command.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">library</span>(siland)</a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="co">## Loading required package: sf</span></a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="co">## Linking to GEOS 3.6.1, GDAL 2.2.3, PROJ 4.9.3</span></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="kw">data</span>(dataSiland)</a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="kw">data</span>(landSiland)</a></code></pre></div>
+<p>Main results for this example have been saved in object resVignette and can be loaded to avoid computing time.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">data</span>(<span class="dt">list=</span><span class="kw">c</span>(<span class="st">&quot;likresB1&quot;</span>,<span class="st">&quot;resB1&quot;</span>,<span class="st">&quot;resB2&quot;</span>,<span class="st">&quot;resB3&quot;</span>,<span class="st">&quot;resF1&quot;</span>,<span class="st">&quot;resF3&quot;</span>,<span class="st">&quot;resF4&quot;</span>,<span class="st">&quot;resF5-1&quot;</span>,<span class="st">&quot;resF5-2&quot;</span>,<span class="st">&quot;resY&quot;</span>))</a></code></pre></div>
+<p><em>dataSiland</em> is a data.frame with columns: “obs”, variable of interest and “x1” variable, a continuous local variable. The “Id” column indicates the identification number of the plots where observations were made. <em>landSiland</em> is an object of class sf where landscape is characterised by two features named L1 and L2. Landscape is described by polygons. For each polygon, L1 is equal to 1 if the polygon is of type L1, 0 otherwise (so is it for L2).</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">str</span>(dataSiland)</a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="co">## &#39;data.frame&#39;:    100 obs. of  5 variables:</span></a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="co">##  $ X  : num  8508 8508 6578 6578 1904 ...</span></a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="co">##  $ Y  : num  7177 7177 3829 3829 1555 ...</span></a>
+<a class="sourceLine" id="cb4-5" title="5"><span class="co">##  $ x1 : num  6.23 6.23 -3.91 -3.91 7.55 ...</span></a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="co">##  $ Id : num  1 1 2 2 3 3 4 4 5 5 ...</span></a>
+<a class="sourceLine" id="cb4-7" title="7"><span class="co">##  $ obs: num  18.34 18.17 1.95 1.09 6.81 ...</span></a>
+<a class="sourceLine" id="cb4-8" title="8"><span class="kw">str</span>(landSiland)</a>
+<a class="sourceLine" id="cb4-9" title="9"><span class="co">## Classes &#39;sf&#39; and &#39;data.frame&#39;:   4884 obs. of  3 variables:</span></a>
+<a class="sourceLine" id="cb4-10" title="10"><span class="co">##  $ L1      : num  0 0 0 0 0 0 0 0 0 0 ...</span></a>
+<a class="sourceLine" id="cb4-11" title="11"><span class="co">##  $ L2      : num  0 1 0 0 0 0 0 0 1 0 ...</span></a>
+<a class="sourceLine" id="cb4-12" title="12"><span class="co">##  $ geometry:sfc_MULTIPOLYGON of length 4884; first list element: List of 1</span></a>
+<a class="sourceLine" id="cb4-13" title="13"><span class="co">##   ..$ :List of 1</span></a>
+<a class="sourceLine" id="cb4-14" title="14"><span class="co">##   .. ..$ : num [1:8, 1:2] 5993 5999 5978 5977 5975 ...</span></a>
+<a class="sourceLine" id="cb4-15" title="15"><span class="co">##   ..- attr(*, &quot;class&quot;)= chr  &quot;XY&quot; &quot;MULTIPOLYGON&quot; &quot;sfg&quot;</span></a>
+<a class="sourceLine" id="cb4-16" title="16"><span class="co">##  - attr(*, &quot;sf_column&quot;)= chr &quot;geometry&quot;</span></a>
+<a class="sourceLine" id="cb4-17" title="17"><span class="co">##  - attr(*, &quot;agr&quot;)= Factor w/ 3 levels &quot;constant&quot;,&quot;aggregate&quot;,..: NA NA</span></a>
+<a class="sourceLine" id="cb4-18" title="18"><span class="co">##   ..- attr(*, &quot;names&quot;)= chr  &quot;L1&quot; &quot;L2&quot;</span></a></code></pre></div>
 <p>You can look at spatial configuration of the loaded data using the following commands :</p>
-
-<pre><code class="r">library(ggplot2)
-library(sf)
-L1pol=st_geometry(landSiland[landSiland$L1==1,])#extract an sf object with only polygons of type L1 
-L2pol=st_geometry(landSiland[landSiland$L2==1,])#extract an sf object with only polygons of type L2 
-ggplot(landSiland)+
-  geom_sf(colour=&quot;grey&quot;,fill=&quot;white&quot;)+
-  geom_sf(data=L1pol,fill=&quot;red&quot;)+
-  geom_sf(data=L2pol,fill=&quot;blue&quot;)+
-  geom_point(data=dataSiland, aes(X,Y),col=&quot;green&quot;)
-</code></pre>
-
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">library</span>(ggplot2)</a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="kw">library</span>(sf)</a>
+<a class="sourceLine" id="cb5-3" title="3">L1pol=<span class="kw">st_geometry</span>(landSiland[landSiland<span class="op">$</span>L1<span class="op">==</span><span class="dv">1</span>,])<span class="co">#extract an sf object with only polygons of type L1 </span></a>
+<a class="sourceLine" id="cb5-4" title="4">L2pol=<span class="kw">st_geometry</span>(landSiland[landSiland<span class="op">$</span>L2<span class="op">==</span><span class="dv">1</span>,])<span class="co">#extract an sf object with only polygons of type L2 </span></a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="kw">ggplot</span>(landSiland)<span class="op">+</span></a>
+<a class="sourceLine" id="cb5-6" title="6"><span class="st">  </span><span class="kw">geom_sf</span>(<span class="dt">colour=</span><span class="st">&quot;grey&quot;</span>,<span class="dt">fill=</span><span class="st">&quot;white&quot;</span>)<span class="op">+</span></a>
+<a class="sourceLine" id="cb5-7" title="7"><span class="st">  </span><span class="kw">geom_sf</span>(<span class="dt">data=</span>L1pol,<span class="dt">fill=</span><span class="st">&quot;red&quot;</span>)<span class="op">+</span></a>
+<a class="sourceLine" id="cb5-8" title="8"><span class="st">  </span><span class="kw">geom_sf</span>(<span class="dt">data=</span>L2pol,<span class="dt">fill=</span><span class="st">&quot;blue&quot;</span>)<span class="op">+</span></a>
+<a class="sourceLine" id="cb5-9" title="9"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data=</span>dataSiland, <span class="kw">aes</span>(X,Y),<span class="dt">col=</span><span class="st">&quot;green&quot;</span>)</a></code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+</div>
+<div id="buffer-approach-bsiland" class="section level3">
 <h3>Buffer approach : Bsiland()</h3>
-
+</div>
+<div id="classical-disks-buffers-point-observations" class="section level3">
 <h3>Classical disks buffers (point observations)</h3>
-
-<p>Buffer approach modelizes effect of lanscape variable with a constant intensity on a buffer (i.e. an area of constant radius) around the observation location. Estimating effects of the local variable x1 and landscape variables L1 and L2 on the variable of interest obs can be done with the command <code>Bsiland()</code>:</p>
-
-<pre><code class="r">resB1=Bsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland)
-resB1
-</code></pre>
-
-<p>Coefficients are the parameter estimates. For a landscape variable, there are two values : for instance for L1, <code>L1</code> (-8.659) is the intensity of the effect and <code>B.L1</code> (106.117) is the estimated buffer size for L1. <code>AIC</code> is AIC the  of the model resB1 (Model: obs ~ x1 + L1 + L2) and <code>AIC(no landscape)</code> is the AIC with only local variable (Model0: obs ~ x1). <code>(No landscape effect) p-value</code> is related to the test of landscape global effect significativity, i.e. H0= &#39;Model0: obs ~ x1&#39; vs H1=&#39;Model: obs ~ x1 + L1 + L2&#39; (Likelihood ratio test).</p>
-
+<p>Buffer approach modelizes effect of lanscape variable with a constant intensity on a buffer (i.e. an area of constant radius) around the observation location. Estimating effects of the local variable x1 and landscape variables L1 and L2 on the variable of interest obs can be done with the command <code>Bsiland()</code>:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">resB1=<span class="kw">Bsiland</span>(obs<span class="op">~</span>x1<span class="op">+</span>L1<span class="op">+</span>L2,<span class="dt">land=</span>landSiland,<span class="dt">data=</span>dataSiland)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">resB1</a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="co">## Model: obs ~ x1 + L1 + L2</span></a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="co">## </span></a>
+<a class="sourceLine" id="cb7-4" title="4"><span class="co">## Landscape variables: L1 L2</span></a>
+<a class="sourceLine" id="cb7-5" title="5"><span class="co">##  </span></a>
+<a class="sourceLine" id="cb7-6" title="6"><span class="co">## Coefficients:</span></a>
+<a class="sourceLine" id="cb7-7" title="7"><span class="co">## (Intercept)          x1          L1          L2        B.L1        B.L2 </span></a>
+<a class="sourceLine" id="cb7-8" title="8"><span class="co">##       2.040       0.111     -11.068      25.401     121.179     218.946 </span></a>
+<a class="sourceLine" id="cb7-9" title="9"><span class="co">## </span></a>
+<a class="sourceLine" id="cb7-10" title="10"><span class="co">## standard error: 1.437742</span></a>
+<a class="sourceLine" id="cb7-11" title="11"><span class="co">## AIC: 366.32  AIC (no landscape): 619.37</span></a>
+<a class="sourceLine" id="cb7-12" title="12"><span class="co">## (No landscape effect) p-value: &lt;1e-16</span></a></code></pre></div>
+<p>Coefficients are the parameter estimates. For a landscape variable, there are two values : for instance for L1, <code>L1</code> (-11.068) is the intensity of the effect and <code>B.L1</code> ( 121.179) is the estimated buffer size for L1. <code>AIC</code> is AIC the of the model resB1 (Model: obs ~ x1 + L1 + L2) and <code>AIC(no landscape)</code> is the AIC with only local variable (Model0: obs ~ x1). <code>(No landscape effect) p-value</code> is related to the test of landscape global effect significativity, i.e. H0= ‘Model0: obs ~ x1’ vs H1=‘Model: obs ~ x1 + L1 + L2’ (Likelihood ratio test).</p>
 <p>Parameter estimates and tests can be obtained using the command <code>summary</code>:</p>
-
-<pre><code class="r">summary(resB1)
-</code></pre>
-
-<p>Note that p.values are given conditionnaly to estimates of buffer radii.  </p>
-
-<p><code>resB1$parambuffer</code> gives the vector of estimated buffers radii.
-<code>resB1$buffer</code> gives a data.frame of the percentages of each landscape variable in buffers of estimated radii for each observation.</p>
-
-<pre><code class="r">resB1$parambuffer
-</code></pre>
-
-<p>The <code>plotBsiland.land()</code> function gives a graphical representation of the estimation. 
-The color intensity is the effect of the landscape variable i.e. the product of the occupancy percentage of the landscape variable in the buffer by the associated coeffcient. </p>
-
-<pre><code class="r">plotBsiland.land(x=resB1,land=landSiland,data=dataSiland)
-plotBsiland.land(x=resB1,land=landSiland,data=dataSiland,var=2)
-</code></pre>
-
-<h4>&ldquo;Doughnut&rdquo; buffers (polygonal observations)</h4>
-
-<p>In function <code>Bsiland</code>, the argument <code>border=F</code> (by default) indicates that buffers are computed from the observations locations. Buffers are thus a circle of constant radius centered on observation locations.<br/>
-The option <code>border=T</code> indicates that buffers are computed from the border of the polygon (observation plot) where observations are made. Then the buffers look much more like &ldquo;doughnuts&rdquo;, with an empty area in the center. </p>
-
-<pre><code class="r">resB2=Bsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland,family=gaussian,border=T)
-resB2$parambuffer
-plotBsiland.land(x=resB2,land=landSiland,data=dataSiland)
-plotBsiland.land(x=resB2,land=landSiland,data=dataSiland,var=2)
-</code></pre>
-
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">summary</span>(resB1)</a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="co">## Buffer sizes:</span></a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="co">##     B.L1     B.L2 </span></a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="co">## 121.1786 218.9462 </span></a>
+<a class="sourceLine" id="cb8-5" title="5"><span class="co">## </span></a>
+<a class="sourceLine" id="cb8-6" title="6"><span class="co">## -- Tests are given conditionnaly to the best estimated buffer sizes --</span></a>
+<a class="sourceLine" id="cb8-7" title="7"><span class="co">## </span></a>
+<a class="sourceLine" id="cb8-8" title="8"><span class="co">## Call:</span></a>
+<a class="sourceLine" id="cb8-9" title="9"><span class="co">## obs ~ x1 + L1 + L2</span></a>
+<a class="sourceLine" id="cb8-10" title="10"><span class="co">## </span></a>
+<a class="sourceLine" id="cb8-11" title="11"><span class="co">## Deviance Residuals: </span></a>
+<a class="sourceLine" id="cb8-12" title="12"><span class="co">##     Min       1Q   Median       3Q      Max  </span></a>
+<a class="sourceLine" id="cb8-13" title="13"><span class="co">## -3.9453  -0.9165  -0.1116   0.9083   4.0983  </span></a>
+<a class="sourceLine" id="cb8-14" title="14"><span class="co">## </span></a>
+<a class="sourceLine" id="cb8-15" title="15"><span class="co">## Coefficients:</span></a>
+<a class="sourceLine" id="cb8-16" title="16"><span class="co">##              Estimate Std. Error t value Pr(&gt;|t|)    </span></a>
+<a class="sourceLine" id="cb8-17" title="17"><span class="co">## (Intercept)   2.04012    0.20636   9.886 2.61e-16 ***</span></a>
+<a class="sourceLine" id="cb8-18" title="18"><span class="co">## x1            0.11068    0.02361   4.688 9.12e-06 ***</span></a>
+<a class="sourceLine" id="cb8-19" title="19"><span class="co">## L1          -11.06774    1.09401 -10.117  &lt; 2e-16 ***</span></a>
+<a class="sourceLine" id="cb8-20" title="20"><span class="co">## L2           25.40082    0.78080  32.532  &lt; 2e-16 ***</span></a>
+<a class="sourceLine" id="cb8-21" title="21"><span class="co">## ---</span></a>
+<a class="sourceLine" id="cb8-22" title="22"><span class="co">## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></a>
+<a class="sourceLine" id="cb8-23" title="23"><span class="co">## </span></a>
+<a class="sourceLine" id="cb8-24" title="24"><span class="co">## (Dispersion parameter for gaussian family taken to be 2.067102)</span></a>
+<a class="sourceLine" id="cb8-25" title="25"><span class="co">## </span></a>
+<a class="sourceLine" id="cb8-26" title="26"><span class="co">##     Null deviance: 2965.92  on 99  degrees of freedom</span></a>
+<a class="sourceLine" id="cb8-27" title="27"><span class="co">## Residual deviance:  198.44  on 96  degrees of freedom</span></a>
+<a class="sourceLine" id="cb8-28" title="28"><span class="co">## AIC: 362.32</span></a>
+<a class="sourceLine" id="cb8-29" title="29"><span class="co">## </span></a>
+<a class="sourceLine" id="cb8-30" title="30"><span class="co">## Number of Fisher Scoring iterations: 2</span></a></code></pre></div>
+<p>Note that p.values are given conditionnaly to estimates of buffer radii.</p>
+<p><code>resB1$parambuffer</code> gives the vector of estimated buffers radii. <code>resB1$buffer</code> gives a data.frame of the percentages of each landscape variable (in columns) in buffers of estimated radii for each observation (in rows).</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">resB1<span class="op">$</span>parambuffer</a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="co">##     B.L1     B.L2 </span></a>
+<a class="sourceLine" id="cb9-3" title="3"><span class="co">## 121.1786 218.9462</span></a></code></pre></div>
+<p>The <code>plotBsiland.land()</code> function gives a graphical representation of the estimation. The color intensity is the effect of the landscape variable i.e. the product of the occupancy percentage of the landscape variable in the buffer by the associated coeffcient.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw">plotBsiland.land</span>(<span class="dt">x=</span>resB1,<span class="dt">land=</span>landSiland,<span class="dt">data=</span>dataSiland)</a>
+<a class="sourceLine" id="cb10-2" title="2"><span class="co">## Plot for landscape variable  L1</span></a>
+<a class="sourceLine" id="cb10-3" title="3"><span class="co">## </span></a>
+<a class="sourceLine" id="cb10-4" title="4"><span class="co">## 121.178571239429</span></a></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqAAAAEgCAMAAABcujGyAAACRlBMVEUAAAAAADoAAGYAAP8AOpAAZrYKCv8QBP8dCv8mD/8tFP8zGP8zMzM4G/86AAA6ADo6AGY6OmY6OpA6kNs9Hv9BIf9GJP9KJ/9NKf9NTU1NTW5NTY5NbqtNjshRLP9ULv9XMf9bM/9dNf9hOP9jOv9mAABmADpmAGZmOgBmOpBmPP9mtv9pP/9rQf9uQ/9uTU1uTW5uTY5ubo5ubqtuq+RxRv9zR/92Sv93S/96Tv99UP9+Uv+BVP+DVv+FWP+HWv+JXP+LXv+NYP+OTU2OTW6OTY6Obk2ObquOyP+PYv+QOgCQOjqQZgCQ29uQ2/+RZf+TZv+VaP+Wav+YbP+bb/+ccP+ecv+gdf+hdv+jeP+jef+lev+nfP+pf/+qgP+rbk2rbm6rbo6rjk2ryKur5OSr5P+sgv+thP+vhv+wif+xif+yiv+0jP+1jv+2ZgC2//+3kP+5kv+6lP+7lv+9mP++mv/AnP/Bnv/DoP/Fov/GpP/Hpv/Ijk3IqP/I///Kqv/MrP/Nrv/OsP/Psv/RtP/Ttv/T09PUuP/Vuv/WvP/Yvv/Zv//ZwP/awv/bkDrb///cxP/dxv/eyP/gyv/hzP/izv/j0P/kq27k0f/k///l0v/m1f/n1v/p2P/p2f/q2//r2//r3P/s3//t4P/v4/3v4//w5f/x5f/x5//y6f/z6f/z6v/07f/17f/17v/27//38f/38v/48//59f/79//8+f/9+//9/f3+/f//tmb/yI7/25D/5Kv//7b//8j//9v//+T///8LzYdaAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAPr0lEQVR4nO2d95/cRhmHBSGmmQAJbe3QOwZskqN3TJIlQOi9OIQcEIrp/Ti6KAGHEnyEEgwYTDEB04zt9eX0nzEj7ZW91WhnpNHM+x19nx98+dxmdt/V+9yrmVnp3awgRDBZ7AAIaYKCEtFQUCIaCkpEQ0GJaCgoEQ2OoDiREo/gpB0nUuIRnLTjREo8gpN2nEiJR3DSjhMp8QhO2nEiJR7BSTtOpMQjOGnHiZR4BCftOJGikStix2AEJ+04kTqTR1VEv7RcQ3HSjhOpK6Ud8RTJ9bEVayhO2nEidaU0pIhliH71LIv28ovASTtOpK7kUQ3JWUFtWBtpxsX64dGVdxS7fpRIidQ/kQ3Jt/6RiKS0n7/yjo0j42LtkcXsj4pIkQZYv/hYpXQIM4+7RluAIEHXX7lcrF+zWkyetTr7o3o4TqRBlrjdBZG9Eu+CIEF1rZxcfYcWdfaHemzv3r3tIu2cedETtC1AwmyBHEFLE9VZXv/H7I/q8TaR6srULW1xFzDWgITZAjmCahuNFbRoKWj5T5e8xd0CsoYVtH9WltQ/nueg3fWSvcTdotrrjx1FH4gRdONGXSk3jixVy/edPyraCdr5zCd6ibsNRpQtECPo9FTudx803TPfYBAj6ELiLJJIZNIWtFKUAJO6oGHxsOHOv6hZENJeARBpOaHotGcQ98I7iQCkfUrHSAPUJvX83Te1EHZdQzIUQfMAG5rdN7XS/UCoNYMRNEBt8vKxACvoLMMRtP/a1H0Gme4HQq0ZjKCd54dWL9J1nstF/G6GImjCV0ymzWAEZXHCZDiCEkhw0o4TKfEITtpxIiUewUl7l0g5/4RlEIJyBY/LEAQNsgdK+kGMoBtHRvuWfV9RX8FPuIERI+jKuLfOIqygwEgRVN/AWXi/q3MKr7LERYqgk6tv0qd4751FKriKh0WMoAfH2k7PnUUIPFLSXls6O3cWIfBISfv6daWL4rrbkciISftKeYr33FmEwCMm7euHR/tX+9kHJcDgpB0nUuIRnLTjREo8gpN2nEiJR3DSjhNpIIbx6QNO2nEi9cOiW0QHcg0hTtpxIvXCopvsh3IFDE7acSL1wqImI0O5hhAn7TiRemGRgEPpkoOTdpxIvbCwgoJ8vUNXcNKOE6kXFjZ6GkivW5y040Tqh4EIuAictONESjyCk3acSIlHcNKOEynxCE7acSIlHsFJO06kxCM4aceJlHhETNrXRiN9Sb3TFfXch0kfMYKujPW/Tp1F8vzWW4eg6KD/DqUIWn0bt1NnEaVnpgwNG2cE8vz224erqBRB1cl8NBo7dRbJb82yLH1BlZ+ZMjR2GLGQIujk0LKuoi6dRQZSQZWfWUZBRbAyduksoqegA5iDqhM8K6gQVsZOnUWGcTmFnoJS0Ojos/nG+1bZWWSe3PiHuPlAyn+pYtK+Nuqtw3KqbF4ymud3KRI1FCftOJGGYvOie+VnRkGjIz/S0CfazduW8rvUTwoaG/GR1twk1O/kcKuC5qygApAeaV76MuNjnt+p6M2crW+X15NQ81IKG+lp30Z6pNrPXTcKKz+zHgXdLtDlfxw/fjxBQ6WnfRvpkdZV0DuVsj0KOvPyx49nytAgrxUS6WnfRnyk882S1Cm+1wo681rH1R/DAkERZwHi075FL5F6Tdh8+vUkNJASFhU0z0+cOIFm6LAFzfMz/SYsXMman4POvbDyM1OGhonHF2kLuuCcpvw807Oh4dj1Xmveen5CzQIoaF+0iNTcPqZKn/IzU4Z2jUwida2bWEF7pY2gpgZc+WmFUvSMKik7BA2/iOjtBfVb3/3cnIP2SitBDS0MlaDZ1NAdp/iF/bq801+X5PKtn5ozlKv4/qiPtPGQG7sQ56dV+k7nuxZJ4Vtuzm+denvmPM9OZSfhfJwDXNAFJai8Fs1UQauxO9cVwZsW9/iK+clTZQ3t47lDgi3owkbtxit9T5+efyR82/cea3aenzw5d44HRJCg+i54xwuWW1eg+plB8C/O6HPWm+enEvBTkqBro7Fb44ZuNa9uxRBlFd/XKwKuiGqQI+jkqmvHTo0bNO0btYdfslsiMaaIiBF048abj7g1btC0vwoy/JLdilQv62yNGEHXlvQJ3aVxQzf6XLJ3MCzvOD45pAiqiuVGQwUtehC0rwraqQgKLezxkCKo7r44Gi25zkHbs3W/hG+6fYHRUL5AzhopghbVNlPPjRt2Fre+5nrdamB/ny2BIkzQnhs35H9R9Jz9bjWwvMiKfm4jSNAFeBI069vQrp9HUc8Zhiaoqm69l1DDBQCkDUMTVFXQ3uWJq2diG6kDE1QZmlL2auhtdyISwxI0kc+nm0htI3VggqZPahupOGnHiXQBATqKJXSawEk7TqTN6HlwjxPh4Ne09gxO2nEibabvvdjEptk4aceJtJkge7HpgJN2nEibUaf43j/NSgictC+MFOXcNoDNWI+kIyjO6gDlL0kECQla7q8ECYWEIxlB89R2qElJSoKmtUNNSpIRtMMdyEQwYgQ9PxrtX+1yRX3jvWoUFxUpgup74+ZaiizsLFJHjaSzX9fiKWISBCmCauZu52xxV2ee79kz1/r6FsXWLhQNhUKSoKpYunYWmUP5me2ZFzRThqZ3reQQkCPo5OC+5c6dRVQBzbLdhua3qN9VgnInCg05ghbzpdO9s0heVdDdgqoKmm9WUJ7ioZAkaLEy7j4H3aPYfYrP81u2pp9J+pnkm6qQIuj0bN65s0j9ZtPmr9JcxE/fcppbFFIE1c2Z1BzUQ2eRBJPUzNYOWpHimxcj6EJwIg3MdG8i0S0KnLTjRBqY6d5EolsUOGnHiTQw02ZQiW5R4KQdJ9IWdFrfVM2gEt2iwEk7TqTudJRrc4GUoJ9AaceJ1Jnw3yCGA07acSJ1JtH1jRdw0o4TqSs5K6gZnLTjROrIZsNbCloHTtpxInVDl8+zZ5Nc4PgAJ+04kbrBCWgjOGnHidSNRD+i9AVO2nEidaPbF38lD07acSKdYfH2Ob8/tgmctONEuhOr7zSgnmZw0o4T6U44w+yImLRPDo5GvX8VYni4Ru+IlLTre+Mmh5Y9NG6QhWMF7WM6ij3BlZL289pDDzfNhWbRCsfxRgz/K3r0b6eVlPaG246tGzeEJn+noin/TjWxhxkr+nXMgtKu7+Hs2rghNLkSNGs21Onp/M9Y0SfBctK+fnipMLa+KSRFugMlqMq/P0H9X9aEvo0gJu2Tg2oNXyDOQZWf3vLv/74N9LuRpaS98rPo3LghMHl+1u+62/8qHvxzKilpXxtpxmD7oCrzZ8+eBU6/fCSmvR6JkaJP8ACQmPZ6JEaKvkQGQGLa65EYKW8m6h2Jaa/HPdIAywPwj2kASFhQqyvdugK9QkYgZUG5gkmApAXlCgafpAXFvkyCaFIWNM12bwMjYUETbfc2MFIWlCQATtpxIg3FIM4QOGnHiTQQw5hj46QdJ9JADGOXAiftOJEGYhj7vDhpx4k0EKygssCJNBBBrjWIjqC0l3cfBbmiPpHlL/jNHHbIEfT8aP9qEaSzyDCWv4kgRtCVfe9XFTTEXZ2mq4zZBlEiYgStTvEhOouYVr9sJCsRYYKG6CxiqKCpftklOMIEDdJZpL5Upvp1weAIEzRIZxHDXJMVVCLCBI3ZWYSLe4kIEzRqZxEu4gUiSNAF4ERKPIKTdpxIiUdw0o4TKfEITtpxIiUewUk7TqTEIzhpx4mUeAQn7TiREo/gpD3Lsr2ZM2GGyI2s9ZDY6d5ETCA27JU6RG5kgd5/f1BQH0PkRkZBQyI3QWIjo6CE9AkFJaKhoEQ0FJSIhoIS0aAJuvMSZhOTg/pLFRuufa5D34PvNmTjyGjfstsYFdn+xquyd///xmu4jYPKIW5HYHpXjfsRCAGYoDOtHAzo2+wmh5YbekDUsaYy6jZkZaxvQnUZoyNbcxhi7mVhHFQOcTsC5ZBWRyAEYILO3EZn4Lw+pCvjhvvvaphcde246Za9+lC2I7IaU96les2q7ZCGXhamQdUQpyNQDWlzBIIAJujMjcgNzN26vGDgxo03q2rhNGRy9U36FO8yZlpB7YcY78Q2D9oUynVIiyMQBDBBZ1o5mNG3gzb0gJhnbUmfzpyG6G+4Vxl0GlPN6eyHGHtZmAdtTSjtj0A5pMURCAKYoHZ/0+uHlwqnYqAe3XCvoE6VrRxyaLk4v381QAV1OgLTV3E+AkEAE9RqVqRrm9vkcG2kWXKbg15XZs9lzLQi2Q8x9rIwD5qu4l2OgP5tmyMQBDBBZ1o5GKiy09QDov6Zx45DVsZV3bEfM62g9kOMvSzMg8py6HYEdmwzOR60AIAJarMzVxWDce/7oOphp03NQu/ouG2dttwHdTwC3AclpC0UlIiGghLRUFAiGgpKRENBiWgoKBENBSWioaBENBSUiIaCEtFQUCIaCkpEQ0GJaCgoEQ0FJaKhoEQ0FJSIhoIS0VBQIhoKSkRDQYloKCgRDQW155LiPve93/0f8JCHPuzhj3jUox/z2Mc9/glPe/oznvns5zz3ec9/QfGiF7/kpS97+Ste9brXv+GNb3rzW976tre/413vfs97P/DBD334I8XHPvHJT336M5/93Oe/8MUvffkrX/3a17/xzW99+zvf/d73f/DD4sc/+entP/v5L375q1//5re/+/0f/vinP//1b3//xz//9e///Pd/sd9yfCioPRQ0AhTUHgoaAQpqDwWNAAW155J7Nwj6wiZBP9og6I8oaBMU1B4KGgEKag8FjQAFtYeCRoCC2kNBI0BB7aGgEaCg9lDQCFBQeyhoBCioPRQ0AhTUHgoaAQpqDwWNAAW1h4JGgILaQ0EjQEHtoaARoKD28HK7CFBQeyhoBCioPRQ0AhTUHgoaAQpqDwWNAAUloqGgRDQUlIiGghLRUFAiGgpKRENBiWgoKBENBSWioaD2XLgsu+fHDY/dfX12jxvMQ+++/oD5STPDYxefmN3rNpcAU4SCWnPxSTcUx0zGHD1QnGuw6ZhRQvWkFx5Yq7aW+tilzmEmBgW15sLltxUXn1xfQk2/3xz64KcYBD2nDTxa+6B+zgsPanzeAUBBrWmqoBcuf03DKf7uV7/WeIqfPnHtc95memhAUFB7GuaEFy47UApVz7ErzHNQfSq/ovb3espAQSmoFUez7FI9VTxXs0oqHzNVu+mDtYLqx7T29X6ygpZQUGuaKtrFpzbIdCzTmDS8zFRbOQfVUFBrTBW05GjTKb5hm8nsZ3nq5yqegtpzLjMvhNT81LhHWjQIWlXX+ge5D1pQUCIcCkpEQ0GJaCgoEQ0FJaKhoEQ0FJSIhoIS0VBQIhoKSkRDQYloKCgRDQUloqGgRDQUlIiGghLR/B/yUdskMlKQRAAAAABJRU5ErkJggg==" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"></a>
+<a class="sourceLine" id="cb11-2" title="2"><span class="kw">plotBsiland.land</span>(<span class="dt">x=</span>resB1,<span class="dt">land=</span>landSiland,<span class="dt">data=</span>dataSiland,<span class="dt">var=</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb11-3" title="3"><span class="co">## Plot for landscape variable  L2</span></a>
+<a class="sourceLine" id="cb11-4" title="4"><span class="co">## </span></a>
+<a class="sourceLine" id="cb11-5" title="5"><span class="co">## 218.946242121179</span></a></code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<div id="doughnut-buffers-polygonal-observations" class="section level4">
+<h4>“Doughnut” buffers (polygonal observations)</h4>
+<p>In function <code>Bsiland</code>, the argument <code>border=F</code> (by default) indicates that buffers are computed from the observations locations. Buffers are thus a circle of constant radius centered on observation locations.<br />
+The option <code>border=T</code> indicates that buffers are computed from the border of the polygon (observation plot) where observations are made. Then the buffers look much more like “doughnuts”, with an empty area in the center.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">resB2=<span class="kw">Bsiland</span>(obs<span class="op">~</span>x1<span class="op">+</span>L1<span class="op">+</span>L2,<span class="dt">land=</span>landSiland,<span class="dt">data=</span>dataSiland,<span class="dt">family=</span>gaussian,<span class="dt">border=</span>T)</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">resB2<span class="op">$</span>parambuffer</a>
+<a class="sourceLine" id="cb13-2" title="2"><span class="kw">plotBsiland.land</span>(<span class="dt">x=</span>resB2,<span class="dt">land=</span>landSiland,<span class="dt">data=</span>dataSiland)</a>
+<a class="sourceLine" id="cb13-3" title="3"><span class="kw">plotBsiland.land</span>(<span class="dt">x=</span>resB2,<span class="dt">land=</span>landSiland,<span class="dt">data=</span>dataSiland,<span class="dt">var=</span><span class="dv">2</span>)</a></code></pre></div>
+</div>
+<div id="visual-check-of-likelihood-maximisation-procedure." class="section level4">
 <h4>Visual check of likelihood maximisation procedure.</h4>
-
 <p>As with all numerical maximisation procedures, optimization problems may arise. The function <code>Bsiland.lik()</code> allows to point out possible problems of optimization.</p>
-
-<pre><code class="r">Bsiland.lik(resB1,land= landSiland, data=dataSiland,varnames=c(&quot;L1&quot;,&quot;L2&quot;))
-</code></pre>
-
-<p>On this graphic, the -Log-likelihood is represented. The estimation is made by maximazing the likelihood i.e. by minimizing the -Log-likelihood. The orange line indicates the minimal value obtained during the estimation. 
-The black line represents the profiled -loglikelihood for L1 (i.e. the -log-likelihood values when the buffer radius for L1 is set to given values in seqd argument, seqd=seq(2,200,length=10)). The black dotted line indicates the value of L1 buffer size estimated during the global estimation procedure. The red continuous and dotted red lines simirlarly indicates the profiled -loglikelihood and the value of buffer size estimated for L2. When minization correctly occurs, the minimal values of the profiled -loglikelihoods are equal and equal the minimal value of the global -Log-likelihood. This means that the minimums of continuous black and red lines are on the orange line (and that dotted black and red lines intersect the continuous black and red lines at their minimum, respectively). If it is not the case, the minimizing procedure has failed and it is necessary to proceed with a new estimation with different initialisation values. This is possible thanks the argument <code>init</code> in function <code>Bsiland</code>. For instance, for starting estimation from buffer sizes of 20 and 150 for L1 and L2 landscape variables, respectively, use the command <code>Bsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland,init=c(20,150))</code>.</p>
-
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">likresB1=<span class="kw">Bsiland.lik</span>(resB1,<span class="dt">land=</span> landSiland,<span class="dt">data=</span>dataSiland,<span class="dt">varnames=</span><span class="kw">c</span>(<span class="st">&quot;L1&quot;</span>,<span class="st">&quot;L2&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">likresB1</a></code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<p>On this graphic, the -Log-likelihood is represented in function of buffer radii. The estimation is made by maximazing the likelihood i.e. by minimizing the -Log-likelihood. The orange line indicates the minimal value obtained during the estimation. The black line represents the -loglikelihood for L1 when the buffer radius for L1 is set to given values in seqd argument (<code>seqd=seq(2,200,length=10)</code>) and the other parameters are fixed to their estimation. The black dotted line indicates the value of L1 buffer size estimated during the global estimation procedure. The red continuous and dotted red lines simirlarly indicates the -loglikelihood and the value of buffer size estimated for L2. When minization correctly occurs, the minimal values of the profiled -loglikelihoods are equal and equal the minimal value of the global -Log-likelihood. This means that the minimums of continuous black and red lines are on the orange line (and that dotted black and red lines intersect the continuous black and red lines at their minimum, respectively). If it is not the case, the minimizing procedure has failed and it is necessary to proceed with a new estimation with different initialisation values. This is possible using the argument <code>init</code> in function <code>Bsiland</code>. For instance, for starting estimation from buffer sizes of 20 and 150 for L1 and L2 landscape variables, respectively, use the command <code>Bsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland,init=c(20,150))</code>.</p>
+</div>
+</div>
+<div id="spatial-influence-function-approach-fsiland" class="section level3">
 <h3>Spatial Influence Function approach : Fsiland()</h3>
-
-<p>In the Spatial Influence Function (SIF) approach, each unit of landscape variable (cell/pixel) has an influence which is maximal at its location and decreases as the distance increases. For modelling a given landscape variable influence, we consider every cell where the landscape variable is distributed, and computed its influence by summing spatial influence of all cells. The spatial influence of a cell is determined by its intensity (negative or positive) and its SIF, which is a density function described by its mean distance (in <em>siland</em> package). As for the buffer approach, the <em>siland</em> package allows to estimate  the intensity of effect and the scale of effects i.e. here the mean distance of SIF. 
-Estimating effects of the local variable x1 and landscape variables L1 and L2 on the variable of interest obs can be done with the command <code>Fsiland()</code> in a similar syntax than for Bsiland :</p>
-
-<pre><code class="r">resF1=Fsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland)
-resF1
-summary(resF1)
-</code></pre>
-
-<p>Here the parameters related to the landscape variable L1 are intensity <code>L1</code> (-8.30634) and the mean distance of its SIF, <code>SIF.L1</code> (85.0747). The vector <code>resF1$SIF</code>  gives for each landscape variable the mean distance of estimated SIFs. The data.frame <code>resF1$landcontri</code> gives for each landscape variable, the contributions for each observation (i.e. the sum of spatial influence received by each observation from all cells of the landscape).</p>
-
+<p>In the Spatial Influence Function (SIF) approach, each unit of landscape variable (cell/pixel) has an influence which is maximal at its location and decreases as the distance increases. For modelling a given landscape variable influence, we consider every cell where the landscape variable is distributed, and computed its influence by summing spatial influence of all cells. The spatial influence of a cell is determined by its intensity (negative or positive) and its SIF, which is a density function described by its mean distance (in <em>siland</em> package). As for the buffer approach, the <em>siland</em> package allows to estimate the intensity of effect and the scale of effects i.e. here the mean distance of SIF. Estimating effects of the local variable x1 and landscape variables L1 and L2 on the variable of interest obs can be done with the command <code>Fsiland()</code> in a similar syntax than for Bsiland :</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">resF1=<span class="kw">Fsiland</span>(obs<span class="op">~</span>x1<span class="op">+</span>L1<span class="op">+</span>L2,<span class="dt">land=</span>landSiland,<span class="dt">data=</span>dataSiland)</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">resF1</a>
+<a class="sourceLine" id="cb17-2" title="2"><span class="co">## Model: obs ~ x1 + L1 + L2</span></a>
+<a class="sourceLine" id="cb17-3" title="3"><span class="co">## </span></a>
+<a class="sourceLine" id="cb17-4" title="4"><span class="co">## Landscape variables: L1 L2</span></a>
+<a class="sourceLine" id="cb17-5" title="5"><span class="co">##  </span></a>
+<a class="sourceLine" id="cb17-6" title="6"><span class="co">## Coefficients:</span></a>
+<a class="sourceLine" id="cb17-7" title="7"><span class="co">## (Intercept)          x1          L1          L2      SIF.L1      SIF.L2 </span></a>
+<a class="sourceLine" id="cb17-8" title="8"><span class="co">##       1.249       0.085     -11.957      29.458     113.489     190.179 </span></a>
+<a class="sourceLine" id="cb17-9" title="9"><span class="co">## </span></a>
+<a class="sourceLine" id="cb17-10" title="10"><span class="co">## standard error: 1.123119</span></a>
+<a class="sourceLine" id="cb17-11" title="11"><span class="co">## AIC: 316.93  AIC (no landscape): 619.37</span></a>
+<a class="sourceLine" id="cb17-12" title="12"><span class="co">## (No landscape effect) p-value: &lt;1e-16</span></a>
+<a class="sourceLine" id="cb17-13" title="13"><span class="kw">summary</span>(resF1)</a>
+<a class="sourceLine" id="cb17-14" title="14"><span class="co">## SIF parameters:</span></a>
+<a class="sourceLine" id="cb17-15" title="15"><span class="co">##   SIF.L1   SIF.L2 </span></a>
+<a class="sourceLine" id="cb17-16" title="16"><span class="co">## 113.4894 190.1787 </span></a>
+<a class="sourceLine" id="cb17-17" title="17"><span class="co">## </span></a>
+<a class="sourceLine" id="cb17-18" title="18"><span class="co">## -- Tests are given conditionnaly to the best SIF parameters --</span></a>
+<a class="sourceLine" id="cb17-19" title="19"><span class="co">## </span></a>
+<a class="sourceLine" id="cb17-20" title="20"><span class="co">## Call:</span></a>
+<a class="sourceLine" id="cb17-21" title="21"><span class="co">## obs ~ x1 + L1 + L2</span></a>
+<a class="sourceLine" id="cb17-22" title="22"><span class="co">## </span></a>
+<a class="sourceLine" id="cb17-23" title="23"><span class="co">## Deviance Residuals: </span></a>
+<a class="sourceLine" id="cb17-24" title="24"><span class="co">##      Min        1Q    Median        3Q       Max  </span></a>
+<a class="sourceLine" id="cb17-25" title="25"><span class="co">## -2.97160  -0.83136   0.02424   0.66240   2.68791  </span></a>
+<a class="sourceLine" id="cb17-26" title="26"><span class="co">## </span></a>
+<a class="sourceLine" id="cb17-27" title="27"><span class="co">## Coefficients:</span></a>
+<a class="sourceLine" id="cb17-28" title="28"><span class="co">##              Estimate Std. Error t value Pr(&gt;|t|)    </span></a>
+<a class="sourceLine" id="cb17-29" title="29"><span class="co">## (Intercept)   1.24886    0.17868   6.989 3.65e-10 ***</span></a>
+<a class="sourceLine" id="cb17-30" title="30"><span class="co">## x1            0.08501    0.01861   4.568 1.46e-05 ***</span></a>
+<a class="sourceLine" id="cb17-31" title="31"><span class="co">## L1          -11.95677    0.97356 -12.281  &lt; 2e-16 ***</span></a>
+<a class="sourceLine" id="cb17-32" title="32"><span class="co">## L2           29.45810    0.68872  42.772  &lt; 2e-16 ***</span></a>
+<a class="sourceLine" id="cb17-33" title="33"><span class="co">## ---</span></a>
+<a class="sourceLine" id="cb17-34" title="34"><span class="co">## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></a>
+<a class="sourceLine" id="cb17-35" title="35"><span class="co">## </span></a>
+<a class="sourceLine" id="cb17-36" title="36"><span class="co">## (Dispersion parameter for gaussian family taken to be 1.261396)</span></a>
+<a class="sourceLine" id="cb17-37" title="37"><span class="co">## </span></a>
+<a class="sourceLine" id="cb17-38" title="38"><span class="co">##     Null deviance: 2965.92  on 99  degrees of freedom</span></a>
+<a class="sourceLine" id="cb17-39" title="39"><span class="co">## Residual deviance:  121.09  on 96  degrees of freedom</span></a>
+<a class="sourceLine" id="cb17-40" title="40"><span class="co">## AIC: 312.93</span></a>
+<a class="sourceLine" id="cb17-41" title="41"><span class="co">## </span></a>
+<a class="sourceLine" id="cb17-42" title="42"><span class="co">## Number of Fisher Scoring iterations: 2</span></a></code></pre></div>
+<p>Here the parameters related to the landscape variable L1 are intensity <code>L1</code> (-11.644) and the mean distance of its SIF, <code>SIF.L1</code> (111.189). The vector <code>resF1$SIF</code> gives for each landscape variable the mean distance of estimated SIFs. The data.frame <code>resF1$landcontri</code> gives for each landscape variable, the cumulative spatial influence received by each observation (i.e. the sum of spatial influence received by each observation from all cells of the landscape).</p>
 <p>The command <code>plotFsiland.sif</code> gives a representation of the estimated SIF for each landscape variable.</p>
-
-<pre><code class="r">plotFsiland.sif(resF1)
-</code></pre>
-
-<p>The command <code>plotFsiland.land</code> gives map of effects of the landscape. 
-By default, it gives the global contribution of all landscape variables:</p>
-
-<pre><code class="r">plotFsiland.land(x=resF1,land=landSiland,data=dataSiland)
-</code></pre>
-
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">plotFsiland.sif</span>(resF1)</a></code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<p>The command <code>plotFsiland.land</code> gives map of effects of the landscape. By default, it gives the global contribution of all landscape variables:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="kw">plotFsiland.land</span>(<span class="dt">x=</span>resF1,<span class="dt">land=</span>landSiland,<span class="dt">data=</span>dataSiland)</a></code></pre></div>
 <p>One can obtain a map for a specific landscape variable by specifying its number with the argument <code>var</code>:</p>
-
-<pre><code class="r">plotFsiland.land(x=resF1,land=landSiland,data=dataSiland,var=2)
-</code></pre>
-
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw">plotFsiland.land</span>(<span class="dt">x=</span>resF1,<span class="dt">land=</span>landSiland,<span class="dt">data=</span>dataSiland,<span class="dt">var=</span><span class="dv">2</span>)</a></code></pre></div>
+<div id="fsiland-arguments" class="section level4">
 <h4>Fsiland() arguments</h4>
-
 <ul>
 <li><p>The argument <code>wd</code> indicates the mesh size used to construct spatial unit (cells/pixels) of landscape variable. In fact, lanscape variable described as polygon are discretized on grid during the procedure estimation (like raster). The choice of wd is a tradeoff between computing precision and computing time (and memory size). The smallest <code>wd</code> is, the better are the precision but the longer the computing time is (and the larger the required memory size is). It is worth to note that estimated parameters can be very sensitive to this mesh size. <strong>To obtain a reliable estimation, we recommand to ensure, after the estimation procedure, that <code>wd</code> size is at least three times smaller than the smallest estimated SIF.</strong> If not, it is recommended to proceed with a new estimation with a smaller <code>wd</code> size.</p></li>
-<li><p>The argument <code>border</code> indicates whether an observation receives the spatial influence of cells belonging to the same plot (i.e. the plot where the observation was made). If <code>border=T</code>, its receives influence only from the border of the plot (so no influence from the cells of the plot). By default, <code>border = F</code> (all cells are considered). </p></li>
-<li><p>The argument <code>sif</code> defines the family function of SIF, i.e. the form of decrease for the landscape influence. The family can be <code>exponential</code>, <code>gaussian</code>, or <code>uniform</code>. If influence is uniform, it implies that there is no decrease of inlfuence and influence is uniform around each pixel of the raster. Note that all landscape variables have the same form. </p></li>
+<li><p>The argument <code>border</code> indicates whether an observation receives the spatial influence of cells belonging to the same plot (i.e. the plot where the observation was made). If <code>border=T</code>, its receives influence only from the border of the plot (so no influence from the cells of the plot). By default, <code>border = F</code> (all cells are considered).</p></li>
+<li><p>The argument <code>sif</code> defines the family function of SIF, i.e. the form of decrease for the landscape influence. The family can be <code>exponential</code>, <code>gaussian</code>, or <code>uniform</code>. If influence is uniform, it implies that there is no decrease of inlfuence and influence is uniform around each pixel of the raster. Note that all landscape variables have the same form.</p></li>
 </ul>
-
+</div>
+</div>
+<div id="comparison-between-fsiland-and-bsiland" class="section level3">
 <h3>Comparison between Fsiland() and Bsiland()</h3>
-
-<p>Buffer approach modelizes landscape effect from the observation location whereas SIF approach modelizes landscape from the lanscape variables locations. These difference of point of view made difficult to compare the estimated results directly. It is possible to compare the landscape effect received by each observation, named hereafter contribution, estimated by the both models.</p>
-
-<pre><code class="r">par(mfrow=c(2,1))
-resB1$parambuffer
-resF1$paramSIF
-plot(resB1$buffer[,1],resF1$landcontri[,1],xlab=&quot;Buffer contribution&quot;,ylab=&quot;FIS contribution&quot;, main=&quot;Variable L1&quot;)
-abline(0,1)
-plot(resB1$buffer[,2],resF1$landcontri[,2],xlab=&quot;Buffer contribution&quot;,ylab=&quot;FIS contribution&quot;, main=&quot;Variable L2&quot;)
-abline(0,1)
-</code></pre>
-
-<p>To compare models adequacy to data, one can compare their AIC (the smaller the better) : </p>
-
-<pre><code class="r">resB1$AIC
-resF1$AIC
-</code></pre>
-
+<p>Buffer approach modelizes landscape effect from the observation location whereas SIF approach modelizes landscape from the lanscape variables locations. These difference of point of view made difficult to compare the estimated results directly. It is possible to compare the landscape effect received by each observation, named hereafter (landscape) contribution, estimated by the both models.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"></a>
+<a class="sourceLine" id="cb21-2" title="2">resB1<span class="op">$</span>parambuffer</a>
+<a class="sourceLine" id="cb21-3" title="3"><span class="co">##     B.L1     B.L2 </span></a>
+<a class="sourceLine" id="cb21-4" title="4"><span class="co">## 121.1786 218.9462</span></a>
+<a class="sourceLine" id="cb21-5" title="5">resF1<span class="op">$</span>paramSIF</a>
+<a class="sourceLine" id="cb21-6" title="6"><span class="co">##   SIF.L1   SIF.L2 </span></a>
+<a class="sourceLine" id="cb21-7" title="7"><span class="co">## 113.4894 190.1787</span></a>
+<a class="sourceLine" id="cb21-8" title="8"><span class="kw">plot</span>(resB1<span class="op">$</span>buffer[,<span class="dv">1</span>],resF1<span class="op">$</span>landcontri[,<span class="dv">1</span>],<span class="dt">xlab=</span><span class="st">&quot;Buffer contribution&quot;</span>,<span class="dt">ylab=</span><span class="st">&quot;FIS contribution&quot;</span>, <span class="dt">main=</span><span class="st">&quot;Variable L1&quot;</span>)</a>
+<a class="sourceLine" id="cb21-9" title="9"><span class="kw">abline</span>(<span class="dv">0</span>,<span class="dv">1</span>)</a></code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw">plot</span>(resB1<span class="op">$</span>buffer[,<span class="dv">2</span>],resF1<span class="op">$</span>landcontri[,<span class="dv">2</span>],<span class="dt">xlab=</span><span class="st">&quot;Buffer contribution&quot;</span>,<span class="dt">ylab=</span><span class="st">&quot;FIS contribution&quot;</span>, <span class="dt">main=</span><span class="st">&quot;Variable L2&quot;</span>)</a>
+<a class="sourceLine" id="cb22-2" title="2"><span class="kw">abline</span>(<span class="dv">0</span>,<span class="dv">1</span>)</a></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqAAAAEgCAMAAABcujGyAAAAq1BMVEUAAAAAADoAAGYAOmYAOpAAZpAAZrY6AAA6ADo6AGY6OgA6Ojo6OmY6OpA6ZpA6ZrY6kNtmAABmADpmOgBmOjpmZmZmkJBmtrZmtttmtv+QOgCQZgCQZjqQkGaQkLaQtpCQttuQ2/+2ZgC2Zjq2kGa227a229u22/+2/7a2///bkDrbtmbbtpDb27bb29vb2//b/7bb/9vb////tmb/25D/27b//7b//9v///8cA3r/AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAPs0lEQVR4nO2diXbbuBVAGceN092amXZqd7pEXZKonXYaObL+/8tKACRFcBGxkXwQ7z1nJjJFPVL09cNCECjOAIIp1j4BgGsgKIgGQUE0CAqiQVAQDYKCaBAURIOgIBoEBdEgKIgGQUE0CAqiQVAQDYKCaBAURIOgIBoEBdEgKIgGQUE0CAqiQVAQDYKCaBAURIOgIBoEBdEgKIgGQUE0CAqiQVAQDYKCaBAURIOgIBoE9eL1uXjzQb96eSjuvwzuYG/eF3efx97THOqIiq/fFUXxq4/pTjh7ENSPQ1E82i9s4gQ9PhSKlrGbB0H9OO2MZKVsjXhX8RFUBf0wlps3CoJ6sjc+lRa9K//597eqSFYbSs/+8m1x908j4WV7Keg/ynL7Nx8bQV//VubI3zYKtgQ9fffw7mw5DQjqydEU7WUJ/6R/qIvkg351/z8tYWv73rxUzhlByxyseFs7eOiV6AjaAkE9Kf0yrpn//+yLSqaPWtD7j+f/aAnb2/d6+7+KMuEaQUv9PlbvaXqCUsS3QVBf9ip3XgT78e+/UPJVKfVSz6y3V1UClRX1e6XgJgPXWbIrqMqwTwt+H+EgqC9H5V2l3esPpvx+13hmBG1tr8pr9bZ+7+WhuJT/53NP0K+lnyTQCwjqiyrjP5m2fGlc8fbPP+66gra3741ujaBV9XRMUOUvfrZAUG/KMv53pqVkCvpTT9D29oEMahfglqD42QVBvdGFtLbuqGuLdSPpImh7+97UKNt10HdWuLagJ8r3LgjqjSrAjWS6vf31uVcHbW8vBb3rtOLf/EHVNGsRD3WZX+q8x88uCOqPUkoX01rVgUZSe/tYP2iTNluCNg0o+kEbENSf0qPKINVaf/tX3WXUa8VX2/t3kr7+8GB+NrQEbV4iaAOCgmgQFESDoCAaBAXRICiIBkFBNAgKokFQEA2CgmgQFESDoCAaBAXRICiIBkFBNAgKokFQEA2CgmgQFESDoCAaBAXRICiIBkFBNAgKokFQEI2foPu7z3pqImb5h4XwElT7+f6DmuSKKVZhEXwEPe3UbG162qwDc1zBIvgJ+nR+fdZTXx+ZPQgWwa+IV7O4kUFhQbwEPe3ULKxlCj3SSoJl8OxmOjbzXgIsQeJ+0ALACX9B62mBo5o/9Ptvnlq+6xoGCLr3MfMwsjOCbh1lgEOK9BdUd3KG4p+54TYxEkxrECJoiptDCLphLhlqDkFfn1M0zRF0mzRuzifo+eiwhOlkQwpBN0enZlecnSwIKeKLyVb8oV7i91iMVFgRdEsMtjrcGiIBGXSa6j68YuxWJ4JuBfcW8eCOswjaakeNDRZB0A3g110zXOaHCKoX4rt2k50MunkG3JyQdaTVFNRIUvodrjWVmjepg26Q4bw51ShKJmidHq8OpKtbUqP7IOhNMl6oT3YrJRO0rmDGDUVG0FtjosI53e+Zqg7qlEHdw0H+uDSGHDrmU7XiHeqgPuEga5wb6o4d80Mf891xshWf8rggFs9BP2EjhGbpB10+HCzLcgPSEBT8WHiwJIKCE9rKFQbyegp62j26DBZJeFwQwWqjzBfOoIyoz5DOGM6FD+694+kb036no34LVG66Di+e4QS8d6wFHXscLvFxYS3aBV0+gu4vhXTEs3MIKpt+JSywmz3BqXjvWGfQhY4LyzLWQFir2UA3EzRIbLzO80xSwuPCIojtWQnOoJETf4q8GJuj6X0PfKJtAcKL+H3U4/FCvv62Ge+RXq1N1CNcUPpB8+Za7/t6vUo9wgWlHzRbqsQ5ruEtCHraUcRniFvve9aCTj4Pl/a4kAyP3vdbqIMudFzoEtLAHmkNjYfqv7NSux5Bc8M3uSXq4awPu7SnIYLqQj5yeRkEDcSnepiw970+7OJlf4CgZvrFQ9xTcwgaiKugie8MVYddvvXkL2j9XPw+JIcyYDkWB0XmuL4ZCcrMIutytZCd72/fHDYHQespwJlZZCXG7k7OXC5dhtbLr4OqMj5ykUMETcmCdSbhrfhmrB3D7YRw6xV6+kHz5dbd1CBonmzBTc2cgh6vTDG2jaubgp6Jm0icDd51ULeZRfZF8fjy6y/jy9Jt5wpHYjWbt+WmZp4Mqjrx9zp7sohCHE3H4wbd1ITfSbqCzpsv75WgLEMThxn0vk03NeF3kq5gFkR+/e+ZDBqLSZwbvlohHfXTHaDN4yCja3dnfsmXSGkXNzO/WFGEj6i/2kiqxjqNrzub9zWf2xrrwYztFu8K+kEDmHXIxECFc8uOBmRQpl+cS9CxBzNmOVgmhAvq9tjx2F5ZX/AZBK0qnOMrBWV9wSLwFTRy+sXsByzPMeisuRzDYRHUb8dNT7/Y2HnlL8znr8/6Wx0xEUHT7rhKuIVwccU1u/bLkbHo1EH9dnx9nu5mmtwnzwvuIKiTw+ONocGP5lsjiidA0L1DR31dQb2x9eITCHqt/r3pVDlCSEf9ZOuodbv+xm51Tit0RdDpxuGWU+UIM92Lb3a5tcEi0woNOpxzx8W6hIxmmpzW7nYzqAsdFXEzipDBItMrxTeLyd9YHdQX3IxmpsEik3M03vzvjcSZBvpB02O7iadRIGhaBnvfb/XLLkGIoC8PxZXnNRMfNx8GC/WieWvx87kNghpJquFzmG4qJTnuOngKNV7hvDYKBBwI6WYyDfNbnjzMQ6iJxlBh9mlegifhHfU3PGD56u3K9vAjh5GDF9dFf2WxkEEHuCZUJVxtpsO9z/ZoT/CFOugA1+6n24W6o3rUQYNZuBWfyYj6MaHaebPZ0eUiSv/CcqEfdJChDqNiYPlACu+5QVAHuoV66+QpvGcmRFA1NdjoKJDUx50DjwJ34MGM3mClRGcFQwQIatafyXgxWdesJ76qvAU22A/qUm+U347bChH9oJkJ2hg3IShuiiKgiDc9oC8PUZXQxRXo3tG51osEctjKaKaum+3blfW/uCmQXLuZfHWy0mZnNg8Sp2AyFdS7+3GkXDduYqdc8hQ04AZOT+nWHVcElctmBLUqBR01EVQueQvqMI3CxDJY3KoUTp6CVl5N29VtsA+OAYk7FZgVb0F1/+e1RQ4TH3fs803b5lqkVrcSIuaJr6AvD09mbhH9YoHjTsaYFLQ3iBMywlfQvRoioidg3IcMFkk6YNlB0KoXibZQtngKqudeNNOHrTZYpHXv50qgSw9nccmk4QeFlfAW9KmeIXQ+QSvzRoQq2v+N7NIaX9x6tI0e+QwJEdRUP2d7qrOySSW+gb2aHqbhMCPVh9pODM2NkDqoXufQYZrQsOPW5ffl/+03i3FBr1ZtCyZPyBNfQY9vPpx2Knc6zFQfdtxrgjZZtSOoQ7OLdlKeePeDHvWkny8PUQV8oKDNtk491OlLUMJnicA7Se06aH82basV79VfRSs+R2YSNGidpKZHvd2K79cyrd53uHHmETRonaTe2MxutbHKn9y23BLe3UyXe0HjraSgVT7qErvo7GP9TOLcGrNk0KB1kqYE5Zb6JplF0EQZ1Gqo1z1MJNBtEXInaZqQdZKGRpF0NlHAb48QQVsJcoyAdZL6fvZ9xM/NMZOgAce1BCVXgkGeoLgJLeYWdGwGJ7c6KGyehTPopRd17J3QyHCbSCjim14k/IQus9xJ8jhupxcpIiLcJCsOFiFjwjSrDRYBcGIOQR1udUYfY62IeYTM4iTThkw8WCT6GGtFzCNkFie5nqBk0LVDZnGS6wnqMFgk/hgrRcwjZBYnuaKg04NFEhxjnYh5hMziJNcUVMoxpF/VuUJmcZIIKv+qzhUyi5NEUPlXda6QWZwkgsq/qnOFzOIk8xMUIBgEBdEgKIgGQUE0CAqiQVAQDYKCaBAURIOgIBoEBdEgKIgGQUE0CAqimVFQa3Hv+JW++0Fefh61plMvpH7qP352FessDzN87/M+crGgTkjznETUAm7dkOeXhwQRFfMJeizP9lifsfVDkojqusYtOtYN+fpcvjhEX1brLNUka6m/d2lCtKBWyJf30X9C3ZDH8gxPuxSGziaoeQS0Wtzb+iFJRP0HGy2oFbJaqzQyqBWytYp0oog6aLSgdsi49YOHQpofYi+lZjZBrV93kt+9HeRYPMZf2IHzis13/ZCxgnYjHu7/GCuoHfKQItPZv+8kOVkzn6D6HI/tE44UqhckgaD984pcrHQg5CFWeTti+WN0HdQOuf9lgrq3FfJ492mXojp/nlFQk4mqfGT9kCSi3hAtaP+8/J74dwh5jP5F2RFV6RktqBWyWkU45VkeVO0rtuQwIKgdMkkbyf6qr89xPtkR1ZwuaQWtNkVeTFvQNwlKTANFfDtOdP4c/KqRf5j9K5m4iDebHpxWInILaaqisSE12TaSzkkEtUMeElSbBr5q5C/KinioZi+MtGngJCPbNVZI85tJ0lTKt5sphaB2yEPkr70f0vzWIs+zf/GiM2j6k+x2r6UIqcm4oz7FBWiHfHlI0uy0zlKpFD33f+/ixd9Jsk9SWRXbSOrcoEjxvTUz3uqs7vKZxlySW35WxDR/oa2QVekZfZrWWe6ji+NuxHOSW53pT9IOeUxy1/jMYBEQDoKCaBAURIOgIBoEBdEgKIgGQUE0CAqiQVAQDYKCaBAURIOgIBoEBdEgKIgGQUE0CAqiQVAQDYKCaBAURIOgIBoEBdEgKIgGQUE0CAqiQVAQDYKCaBAURIOgLuz7szYdiuLx4Df/0LGa/0jN/dafkrF810wKB20Q1AUzW1d7snm1fodew8MdS7+eoMg5DIK6YARtC6l88nQKQUNAUBdqQSspT7vfP5i5Gu8+61kbS3FP3/ypXrfpUK3bVk1BeNp9vyuKJ7X22v1Paq9PuohXIR7P7YD3P5l5X62Prfm1JYCgLlRF/LvGp6dGVlXuq6lvzVoZCrVFJdtj8aRXWzvt1Ap2bz6Yj+gl2JSgzec6AbsfW/WLrw+CumAaSUUlV9snU+wf7z435X/9wkwwfFRiPuoivdndCFqtxdYN2PvYSl9ZCgjqgsmgao2ark9m0utKP03tlPm3fqedIy+t+KPJq+13ex9b5xuLAUFdqObc3vcT3rFedeMi6Pt6ynu1odq1L6jeq/z/sKCtj63zjcWAoC5Ugg6UyM2yAWTQeUBQF+oMev/FrlC2uppaL3p10EFBdR20H7D3seW/rSgQ1IW6Dvqk1zV8fS7sVvx5X/mkUVvUUheX5ngt6GNbULVqixXwsduKR9AzgrrRutV52hXF9610qHs97z63Ver1g1am7auezlPTD/p0Cdi82/vYtkFQEA2CgmgQFESDoCAaBAXRICiIBkFBNAgKokFQEA2CgmgQFESDoCAaBAXRICiIBkFBNAgKokFQEA2CgmgQFESDoCAaBAXRICiIBkFBNAgKovk/xoN4qGWmZAAAAAAASUVORK5CYII=" style="display: block; margin: auto;" /></p>
+<p>To compare models adequacy to data, one can compare their AIC (the smaller the better) :</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">resB1<span class="op">$</span>AIC</a>
+<a class="sourceLine" id="cb23-2" title="2"><span class="co">## [1] 366.3203</span></a>
+<a class="sourceLine" id="cb23-3" title="3">resF1<span class="op">$</span>AIC</a>
+<a class="sourceLine" id="cb23-4" title="4"><span class="co">## [1] 316.9274</span></a></code></pre></div>
+</div>
+</div>
+<div id="model-extensions" class="section level2">
 <h2>Model extensions</h2>
-
+<div id="mixed-model" class="section level3">
 <h3>Mixed model</h3>
-
-<p>Random effect can be included using the syntax <code>(1|  )</code>. Note that only local effect are concerned. </p>
-
-<pre><code class="r">resB3=Bsiland(obs~x1+L1+L2+(1|Id),land=landSiland,data=dataSiland)
-summary(resB3)
-resF3=Fsiland(obs~x1+L1+L2+(1|Id),land=landSiland,data=dataSiland)
-summary(resF3)
-</code></pre>
-
+<p>Random effect can be included using the syntax <code>(1|  )</code>. Note that only local effect are concerned.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1">resB3=<span class="kw">Bsiland</span>(obs<span class="op">~</span>x1<span class="op">+</span>L1<span class="op">+</span>L2<span class="op">+</span>(<span class="dv">1</span><span class="op">|</span>Id),<span class="dt">land=</span>landSiland,<span class="dt">data=</span>dataSiland)</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="kw">summary</span>(resB3)</a>
+<a class="sourceLine" id="cb25-2" title="2"><span class="co">## Buffer sizes:</span></a>
+<a class="sourceLine" id="cb25-3" title="3"><span class="co">##     B.L1     B.L2 </span></a>
+<a class="sourceLine" id="cb25-4" title="4"><span class="co">## 121.7323 219.1212 </span></a>
+<a class="sourceLine" id="cb25-5" title="5"><span class="co">## </span></a>
+<a class="sourceLine" id="cb25-6" title="6"><span class="co">## -- Tests are given conditionnaly to the best estimated buffer sizes --</span></a>
+<a class="sourceLine" id="cb25-7" title="7"><span class="co">## Linear mixed model fit by REML [&#39;lmerMod&#39;]</span></a>
+<a class="sourceLine" id="cb25-8" title="8"><span class="co">## </span></a>
+<a class="sourceLine" id="cb25-9" title="9"><span class="co">## REML criterion at convergence: 345.1</span></a>
+<a class="sourceLine" id="cb25-10" title="10"><span class="co">## </span></a>
+<a class="sourceLine" id="cb25-11" title="11"><span class="co">## Scaled residuals: </span></a>
+<a class="sourceLine" id="cb25-12" title="12"><span class="co">##     Min      1Q  Median      3Q     Max </span></a>
+<a class="sourceLine" id="cb25-13" title="13"><span class="co">## -2.0652 -0.5592 -0.1006  0.5043  2.1234 </span></a>
+<a class="sourceLine" id="cb25-14" title="14"><span class="co">## </span></a>
+<a class="sourceLine" id="cb25-15" title="15"><span class="co">## Random effects:</span></a>
+<a class="sourceLine" id="cb25-16" title="16"><span class="co">##  Groups   Name        Variance Std.Dev.</span></a>
+<a class="sourceLine" id="cb25-17" title="17"><span class="co">##  Id       (Intercept) 0.9769   0.9884  </span></a>
+<a class="sourceLine" id="cb25-18" title="18"><span class="co">##  Residual             1.1309   1.0635  </span></a>
+<a class="sourceLine" id="cb25-19" title="19"><span class="co">## Number of obs: 100, groups:  Id, 50</span></a>
+<a class="sourceLine" id="cb25-20" title="20"><span class="co">## </span></a>
+<a class="sourceLine" id="cb25-21" title="21"><span class="co">## Fixed effects:</span></a>
+<a class="sourceLine" id="cb25-22" title="22"><span class="co">##              Estimate Std. Error t value</span></a>
+<a class="sourceLine" id="cb25-23" title="23"><span class="co">## (Intercept)   2.03952    0.25219   8.087</span></a>
+<a class="sourceLine" id="cb25-24" title="24"><span class="co">## x1            0.11059    0.02884   3.835</span></a>
+<a class="sourceLine" id="cb25-25" title="25"><span class="co">## L1          -11.08324    1.33819  -8.282</span></a>
+<a class="sourceLine" id="cb25-26" title="26"><span class="co">## L2           25.41874    0.95426  26.637</span></a>
+<a class="sourceLine" id="cb25-27" title="27"><span class="co">## </span></a>
+<a class="sourceLine" id="cb25-28" title="28"><span class="co">## Correlation of Fixed Effects:</span></a>
+<a class="sourceLine" id="cb25-29" title="29"><span class="co">##    (Intr) x1     L1    </span></a>
+<a class="sourceLine" id="cb25-30" title="30"><span class="co">## x1  0.161              </span></a>
+<a class="sourceLine" id="cb25-31" title="31"><span class="co">## L1 -0.328 -0.090       </span></a>
+<a class="sourceLine" id="cb25-32" title="32"><span class="co">## L2 -0.658 -0.223  0.066</span></a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">resF3=<span class="kw">Fsiland</span>(obs<span class="op">~</span>x1<span class="op">+</span>L1<span class="op">+</span>L2<span class="op">+</span>(<span class="dv">1</span><span class="op">|</span>Id),<span class="dt">land=</span>landSiland,<span class="dt">data=</span>dataSiland)</a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1"><span class="kw">summary</span>(resF3)</a>
+<a class="sourceLine" id="cb27-2" title="2"><span class="co">## SIF parameters:</span></a>
+<a class="sourceLine" id="cb27-3" title="3"><span class="co">##   SIF.L1   SIF.L2 </span></a>
+<a class="sourceLine" id="cb27-4" title="4"><span class="co">## 113.4894 190.1787 </span></a>
+<a class="sourceLine" id="cb27-5" title="5"><span class="co">## </span></a>
+<a class="sourceLine" id="cb27-6" title="6"><span class="co">## -- Tests are given conditionnaly to the best SIF parameters --</span></a>
+<a class="sourceLine" id="cb27-7" title="7"><span class="co">## Linear mixed model fit by maximum likelihood  [&#39;lmerMod&#39;]</span></a>
+<a class="sourceLine" id="cb27-8" title="8"><span class="co">## </span></a>
+<a class="sourceLine" id="cb27-9" title="9"><span class="co">##      AIC      BIC   logLik deviance df.resid </span></a>
+<a class="sourceLine" id="cb27-10" title="10"><span class="co">##    314.7    330.3   -151.4    302.7       94 </span></a>
+<a class="sourceLine" id="cb27-11" title="11"><span class="co">## </span></a>
+<a class="sourceLine" id="cb27-12" title="12"><span class="co">## Scaled residuals: </span></a>
+<a class="sourceLine" id="cb27-13" title="13"><span class="co">##      Min       1Q   Median       3Q      Max </span></a>
+<a class="sourceLine" id="cb27-14" title="14"><span class="co">## -2.62434 -0.73048  0.01841  0.59069  2.34981 </span></a>
+<a class="sourceLine" id="cb27-15" title="15"><span class="co">## </span></a>
+<a class="sourceLine" id="cb27-16" title="16"><span class="co">## Random effects:</span></a>
+<a class="sourceLine" id="cb27-17" title="17"><span class="co">##  Groups   Name        Variance Std.Dev.</span></a>
+<a class="sourceLine" id="cb27-18" title="18"><span class="co">##  Id       (Intercept) 0.080    0.2828  </span></a>
+<a class="sourceLine" id="cb27-19" title="19"><span class="co">##  Residual             1.131    1.0635  </span></a>
+<a class="sourceLine" id="cb27-20" title="20"><span class="co">## Number of obs: 100, groups:  Id, 50</span></a>
+<a class="sourceLine" id="cb27-21" title="21"><span class="co">## </span></a>
+<a class="sourceLine" id="cb27-22" title="22"><span class="co">## Fixed effects:</span></a>
+<a class="sourceLine" id="cb27-23" title="23"><span class="co">##              Estimate Std. Error t value</span></a>
+<a class="sourceLine" id="cb27-24" title="24"><span class="co">## (Intercept)   1.24886    0.18076   6.909</span></a>
+<a class="sourceLine" id="cb27-25" title="25"><span class="co">## x1            0.08501    0.01883   4.515</span></a>
+<a class="sourceLine" id="cb27-26" title="26"><span class="co">## L1          -11.95677    0.98490 -12.140</span></a>
+<a class="sourceLine" id="cb27-27" title="27"><span class="co">## L2           29.45810    0.69674  42.280</span></a>
+<a class="sourceLine" id="cb27-28" title="28"><span class="co">## </span></a>
+<a class="sourceLine" id="cb27-29" title="29"><span class="co">## Correlation of Fixed Effects:</span></a>
+<a class="sourceLine" id="cb27-30" title="30"><span class="co">##    (Intr) x1     L1    </span></a>
+<a class="sourceLine" id="cb27-31" title="31"><span class="co">## x1  0.201              </span></a>
+<a class="sourceLine" id="cb27-32" title="32"><span class="co">## L1 -0.373 -0.107       </span></a>
+<a class="sourceLine" id="cb27-33" title="33"><span class="co">## L2 -0.702 -0.252  0.055</span></a></code></pre></div>
+</div>
+<div id="non-gaussian-model" class="section level3">
 <h3>Non gaussian model</h3>
-
-<p>To consider distributions of the variable of interest that differ from Gaussian, use the option <code>family</code> available in the Bsiland and the Fsiland functions. Family can be &ldquo;gaussian&rdquo;, &ldquo;poisson&rdquo; or &ldquo;binomial&rdquo; and the associated link function are identity, log and logit respectively.</p>
-
+<p>To consider distributions of the variable of interest that differ from Gaussian, use the option <code>family</code> available in the Bsiland and the Fsiland functions. Family can be “gaussian”, “poisson” or “binomial” and the associated link function are identity, log and logit respectively.</p>
+</div>
+<div id="model-with-interaction-between-local-and-landscape-variables" class="section level3">
 <h3>Model with interaction between local and landscape variables</h3>
-
-<p>Interaction between local and landscape variables using the syntax <code>:</code> or <code>*</code> (as well as localxlocal interaction). Interaction term modify the intensity of a landscape variable according to the local variable value. But the scale of effect of the landscape variable remains constant (buffer size for Bsiland or SIF mean distance for Fsiland). </p>
-
-<pre><code class="r">#Model with main and interaction effect
-resF4=Fsiland(obs~x1*L1+L2,land=landSiland,data=dataSiland)
-#Model with only interaction effect
-resF5=Fsiland(obs~x1:L1+L2,land=landSiland,data=dataSiland)
-
-</code></pre>
-
+<p>Interaction between local and landscape variables using the syntax <code>:</code> or <code>*</code> (as well as localxlocal interaction). Interaction term modify the intensity of a landscape variable according to the local variable value. But the scale of effect of the landscape variable remains constant (buffer size for Bsiland or SIF mean distance for Fsiland).</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1"><span class="co">#Model with main and interaction effect</span></a>
+<a class="sourceLine" id="cb28-2" title="2">resF4=<span class="kw">Fsiland</span>(obs<span class="op">~</span>x1<span class="op">*</span>L1<span class="op">+</span>L2,<span class="dt">land=</span>landSiland,<span class="dt">data=</span>dataSiland)</a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1">resF4</a>
+<a class="sourceLine" id="cb29-2" title="2"><span class="co">## Model: obs ~ x1 * L1 + L2</span></a>
+<a class="sourceLine" id="cb29-3" title="3"><span class="co">## </span></a>
+<a class="sourceLine" id="cb29-4" title="4"><span class="co">## Landscape variables: L1 L2</span></a>
+<a class="sourceLine" id="cb29-5" title="5"><span class="co">##  </span></a>
+<a class="sourceLine" id="cb29-6" title="6"><span class="co">## Coefficients:</span></a>
+<a class="sourceLine" id="cb29-7" title="7"><span class="co">## (Intercept)          x1          L1          L2       x1:L1      SIF.L1 </span></a>
+<a class="sourceLine" id="cb29-8" title="8"><span class="co">##       1.243       0.081     -12.023      29.435       0.100     110.550 </span></a>
+<a class="sourceLine" id="cb29-9" title="9"><span class="co">##      SIF.L2 </span></a>
+<a class="sourceLine" id="cb29-10" title="10"><span class="co">##     190.241 </span></a>
+<a class="sourceLine" id="cb29-11" title="11"><span class="co">## </span></a>
+<a class="sourceLine" id="cb29-12" title="12"><span class="co">## standard error: 1.128036</span></a>
+<a class="sourceLine" id="cb29-13" title="13"><span class="co">## AIC: 318.75  AIC (no landscape): 619.37</span></a>
+<a class="sourceLine" id="cb29-14" title="14"><span class="co">## (No landscape effect) p-value: &lt;1e-16</span></a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1"><span class="co">#Model with only interaction effect</span></a>
+<a class="sourceLine" id="cb30-2" title="2">resF5<span class="fl">.1</span>=<span class="kw">Fsiland</span>(obs<span class="op">~</span>x1<span class="op">:</span>L1<span class="op">+</span>L2,<span class="dt">land=</span>landSiland,<span class="dt">data=</span>dataSiland)</a></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1">resF5<span class="fl">.1</span></a>
+<a class="sourceLine" id="cb31-2" title="2"><span class="co">## Model: obs ~ x1:L1 + L2</span></a>
+<a class="sourceLine" id="cb31-3" title="3"><span class="co">## </span></a>
+<a class="sourceLine" id="cb31-4" title="4"><span class="co">## Landscape variables: L1 L2</span></a>
+<a class="sourceLine" id="cb31-5" title="5"><span class="co">##  </span></a>
+<a class="sourceLine" id="cb31-6" title="6"><span class="co">## Coefficients:</span></a>
+<a class="sourceLine" id="cb31-7" title="7"><span class="co">## (Intercept)          L2       x1:L1      SIF.L1      SIF.L2 </span></a>
+<a class="sourceLine" id="cb31-8" title="8"><span class="co">##       0.240      31.366      -0.483      54.074     200.230 </span></a>
+<a class="sourceLine" id="cb31-9" title="9"><span class="co">## </span></a>
+<a class="sourceLine" id="cb31-10" title="10"><span class="co">## standard error: 1.780699</span></a>
+<a class="sourceLine" id="cb31-11" title="11"><span class="co">## AIC: 408.14  AIC (no landscape): 626.76</span></a>
+<a class="sourceLine" id="cb31-12" title="12"><span class="co">## (No landscape effect) p-value: &lt;1e-16</span></a>
+<a class="sourceLine" id="cb31-13" title="13"><span class="co">## Warning in print.Fsiland(x): </span></a>
+<a class="sourceLine" id="cb31-14" title="14"><span class="co">## It is recommended that wd is three times smaller than the estimated SIF mean distance. A new estimation with smaller wd should be more appropriate (see argument wd in Fsiland).</span></a></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1">resF5<span class="fl">.2</span>=<span class="kw">Fsiland</span>(obs<span class="op">~</span>x1<span class="op">:</span>L1<span class="op">+</span>L2,<span class="dt">land=</span>landSiland,<span class="dt">data=</span>dataSiland,<span class="dt">wd=</span><span class="dv">15</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1">resF5<span class="fl">.2</span></a>
+<a class="sourceLine" id="cb33-2" title="2"><span class="co">## Model: obs ~ x1:L1 + L2</span></a>
+<a class="sourceLine" id="cb33-3" title="3"><span class="co">## </span></a>
+<a class="sourceLine" id="cb33-4" title="4"><span class="co">## Landscape variables: L1 L2</span></a>
+<a class="sourceLine" id="cb33-5" title="5"><span class="co">##  </span></a>
+<a class="sourceLine" id="cb33-6" title="6"><span class="co">## Coefficients:</span></a>
+<a class="sourceLine" id="cb33-7" title="7"><span class="co">## (Intercept)          L2       x1:L1      SIF.L1      SIF.L2 </span></a>
+<a class="sourceLine" id="cb33-8" title="8"><span class="co">##       0.215      31.603      -0.457      54.721     200.628 </span></a>
+<a class="sourceLine" id="cb33-9" title="9"><span class="co">## </span></a>
+<a class="sourceLine" id="cb33-10" title="10"><span class="co">## standard error: 1.801733</span></a>
+<a class="sourceLine" id="cb33-11" title="11"><span class="co">## AIC: 410.49  AIC (no landscape): 626.76</span></a>
+<a class="sourceLine" id="cb33-12" title="12"><span class="co">## (No landscape effect) p-value: &lt;1e-16</span></a></code></pre></div>
 <p>The same syntax can be applied with function Bsiland().</p>
-
+</div>
+<div id="multiyear-model-and-multisite-model" class="section level3">
 <h3>Multiyear model and multisite model</h3>
-
-<p>It is possible to deal with data observed during several years, i.e. data associated with several landscapes with the function <code>Bsiland</code> (this option is not implemented yet in Fsiland). 
-The two data objects required are then : </p>
-
-<ul>
-<li> a <strong>list of ** data.frames of located observations, one for each year. An important point is that **data.frames column names have to be exactly the same and ordered in the same way.</strong></li>
-<li> a *<em>list of *</em> sf object containing a landscape description of each year.</li>
-</ul>
-
-<p>Let us suppose we have two years of observations associated with two landscapes. Since the goal is only to show how to deal with such datasets,  we take the same datastets for observations and for landscapes for the two years.</p>
-
-<pre><code class="r">landSilandY1=landSiland
-landSilandY2=landSiland
-#landSilandY is a list with the landscape for each year
-landSilandY=list(landSilandY1,landSilandY2)
-dataSilandY1=dataSiland
-dataSilandY2=dataSiland
-dataSilandY1$year=factor(&quot;2018&quot;)
-dataSilandY2$year=factor(&quot;2019&quot;)
-head(dataSilandY1)
-head(dataSilandY2)
-dataSilandY=list(dataSilandY1,dataSilandY2)
-resY=Bsiland(obs~year+x1+L1+L2, land = landSilandY,data=dataSilandY)
-resY
-summary(resY)
-</code></pre>
-
-<p>It is possible to deal with multisite data, using the same procedure considering different sites instead of different years. </p>
-
+<p>It is possible to deal with data observed during several years, i.e. data associated with several landscapes with the function <code>Bsiland</code> (this option is not implemented yet in Fsiland). The two data objects required are then : * a <strong>list of </strong> data.frames of located observations, one for each year. An important point is that <strong>data.frames column names have to be exactly the same and ordered in the same way.</strong> * a <strong>list of </strong> sf object containing a landscape description of each year.</p>
+<p>Let us suppose we have two years of observations associated with two landscapes. Since the goal is only to show how to deal with such datasets, we take the same datastets for observations and for landscapes for the two years.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1">landSilandY1=landSiland</a>
+<a class="sourceLine" id="cb34-2" title="2">landSilandY2=landSiland</a>
+<a class="sourceLine" id="cb34-3" title="3"><span class="co">#landSilandY is a list with the landscape for each year</span></a>
+<a class="sourceLine" id="cb34-4" title="4">landSilandY=<span class="kw">list</span>(landSilandY1,landSilandY2)</a>
+<a class="sourceLine" id="cb34-5" title="5">dataSilandY1=dataSiland</a>
+<a class="sourceLine" id="cb34-6" title="6">dataSilandY2=dataSiland</a>
+<a class="sourceLine" id="cb34-7" title="7">dataSilandY1<span class="op">$</span>year=<span class="kw">factor</span>(<span class="st">&quot;2018&quot;</span>)</a>
+<a class="sourceLine" id="cb34-8" title="8">dataSilandY2<span class="op">$</span>year=<span class="kw">factor</span>(<span class="st">&quot;2019&quot;</span>)</a>
+<a class="sourceLine" id="cb34-9" title="9"><span class="kw">head</span>(dataSilandY1)</a>
+<a class="sourceLine" id="cb34-10" title="10"><span class="kw">head</span>(dataSilandY2)</a>
+<a class="sourceLine" id="cb34-11" title="11">dataSilandY=<span class="kw">list</span>(dataSilandY1,dataSilandY2)</a>
+<a class="sourceLine" id="cb34-12" title="12">resY=<span class="kw">Bsiland</span>(obs<span class="op">~</span>year<span class="op">+</span>x1<span class="op">+</span>L1<span class="op">+</span>L2, <span class="dt">land =</span> landSilandY,<span class="dt">data=</span>dataSilandY)</a></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1">resY</a>
+<a class="sourceLine" id="cb35-2" title="2"><span class="co">## Model: obs ~ year + x1 + L1 + L2</span></a>
+<a class="sourceLine" id="cb35-3" title="3"><span class="co">## </span></a>
+<a class="sourceLine" id="cb35-4" title="4"><span class="co">## Landscape variables: L1 L2</span></a>
+<a class="sourceLine" id="cb35-5" title="5"><span class="co">##  </span></a>
+<a class="sourceLine" id="cb35-6" title="6"><span class="co">## Coefficients:</span></a>
+<a class="sourceLine" id="cb35-7" title="7"><span class="co">## (Intercept)    year2019          x1          L1          L2        B.L1 </span></a>
+<a class="sourceLine" id="cb35-8" title="8"><span class="co">##       2.040       0.000       0.111     -11.068      25.401     121.179 </span></a>
+<a class="sourceLine" id="cb35-9" title="9"><span class="co">##        B.L2 </span></a>
+<a class="sourceLine" id="cb35-10" title="10"><span class="co">##     218.946 </span></a>
+<a class="sourceLine" id="cb35-11" title="11"><span class="co">## </span></a>
+<a class="sourceLine" id="cb35-12" title="12"><span class="co">## standard error: 1.42664</span></a>
+<a class="sourceLine" id="cb35-13" title="13"><span class="co">## AIC: 720.64  AIC (no landscape): 1234.73</span></a>
+<a class="sourceLine" id="cb35-14" title="14"><span class="co">## (No landscape effect) p-value: &lt;1e-16</span></a>
+<a class="sourceLine" id="cb35-15" title="15"><span class="kw">summary</span>(resY)</a>
+<a class="sourceLine" id="cb35-16" title="16"><span class="co">## Buffer sizes:</span></a>
+<a class="sourceLine" id="cb35-17" title="17"><span class="co">##     B.L1     B.L2 </span></a>
+<a class="sourceLine" id="cb35-18" title="18"><span class="co">## 121.1786 218.9462 </span></a>
+<a class="sourceLine" id="cb35-19" title="19"><span class="co">## </span></a>
+<a class="sourceLine" id="cb35-20" title="20"><span class="co">## -- Tests are given conditionnaly to the best estimated buffer sizes --</span></a>
+<a class="sourceLine" id="cb35-21" title="21"><span class="co">## </span></a>
+<a class="sourceLine" id="cb35-22" title="22"><span class="co">## Call:</span></a>
+<a class="sourceLine" id="cb35-23" title="23"><span class="co">## obs ~ year + x1 + L1 + L2</span></a>
+<a class="sourceLine" id="cb35-24" title="24"><span class="co">## </span></a>
+<a class="sourceLine" id="cb35-25" title="25"><span class="co">## Deviance Residuals: </span></a>
+<a class="sourceLine" id="cb35-26" title="26"><span class="co">##     Min       1Q   Median       3Q      Max  </span></a>
+<a class="sourceLine" id="cb35-27" title="27"><span class="co">## -3.9453  -0.9165  -0.1116   0.9083   4.0983  </span></a>
+<a class="sourceLine" id="cb35-28" title="28"><span class="co">## </span></a>
+<a class="sourceLine" id="cb35-29" title="29"><span class="co">## Coefficients:</span></a>
+<a class="sourceLine" id="cb35-30" title="30"><span class="co">##               Estimate Std. Error t value Pr(&gt;|t|)    </span></a>
+<a class="sourceLine" id="cb35-31" title="31"><span class="co">## (Intercept)  2.040e+00  1.765e-01  11.561  &lt; 2e-16 ***</span></a>
+<a class="sourceLine" id="cb35-32" title="32"><span class="co">## year2019    -1.618e-15  2.018e-01   0.000        1    </span></a>
+<a class="sourceLine" id="cb35-33" title="33"><span class="co">## x1           1.107e-01  1.657e-02   6.681 2.42e-10 ***</span></a>
+<a class="sourceLine" id="cb35-34" title="34"><span class="co">## L1          -1.107e+01  7.676e-01 -14.418  &lt; 2e-16 ***</span></a>
+<a class="sourceLine" id="cb35-35" title="35"><span class="co">## L2           2.540e+01  5.478e-01  46.365  &lt; 2e-16 ***</span></a>
+<a class="sourceLine" id="cb35-36" title="36"><span class="co">## ---</span></a>
+<a class="sourceLine" id="cb35-37" title="37"><span class="co">## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></a>
+<a class="sourceLine" id="cb35-38" title="38"><span class="co">## </span></a>
+<a class="sourceLine" id="cb35-39" title="39"><span class="co">## (Dispersion parameter for gaussian family taken to be 2.035301)</span></a>
+<a class="sourceLine" id="cb35-40" title="40"><span class="co">## </span></a>
+<a class="sourceLine" id="cb35-41" title="41"><span class="co">##     Null deviance: 5931.84  on 199  degrees of freedom</span></a>
+<a class="sourceLine" id="cb35-42" title="42"><span class="co">## Residual deviance:  396.88  on 195  degrees of freedom</span></a>
+<a class="sourceLine" id="cb35-43" title="43"><span class="co">## AIC: 716.64</span></a>
+<a class="sourceLine" id="cb35-44" title="44"><span class="co">## </span></a>
+<a class="sourceLine" id="cb35-45" title="45"><span class="co">## Number of Fisher Scoring iterations: 2</span></a></code></pre></div>
+<p>It is possible to deal with multisite data, using the same procedure considering different sites instead of different years.</p>
+</div>
+</div>
+<div id="remarks" class="section level2">
 <h2>Remarks</h2>
-
-<p>As for an object ot type GLM, functions AIC(), residuals() and fitted() are available. In fact, conditionnaly to the estimated buffers or SIFs, the fitted model  is a GLM or a LMM (Linear Mixed Model) or a GLMM (Generalized Linear Mixed Model). So after an estimation with Bsiland or Fsiland(), it is possible to analyse more precisely the estimated model with the object result stored in the output. Object result is an an object from glm() or lmer() or glmer() functions.</p>
-
-<pre><code class="r">summary(resB1$result)
-BIC(resB1$result)
-fitted(resF1$result)[1:10]
-residuals(resF1$result)[1:10]
-class(resB1$result)
-class(resF1$result)
-
-</code></pre>
-
+<p>As for an object ot type GLM, functions AIC(), residuals() and fitted() are available. In fact, conditionnaly to the estimated buffers or SIFs, the fitted model is a GLM or a LMM (Linear Mixed Model) or a GLMM (Generalized Linear Mixed Model). So after an estimation with Bsiland or <code>Fsiland()</code>, it is possible to analyse more precisely the estimated model with the object result stored in the output. Object result is an an object from glm() or lmer() or glmer() functions.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1"><span class="kw">summary</span>(resB1<span class="op">$</span>result)</a>
+<a class="sourceLine" id="cb36-2" title="2"><span class="co">## </span></a>
+<a class="sourceLine" id="cb36-3" title="3"><span class="co">## Call:</span></a>
+<a class="sourceLine" id="cb36-4" title="4"><span class="co">## glm(formula = model, family = family, data = newdata)</span></a>
+<a class="sourceLine" id="cb36-5" title="5"><span class="co">## </span></a>
+<a class="sourceLine" id="cb36-6" title="6"><span class="co">## Deviance Residuals: </span></a>
+<a class="sourceLine" id="cb36-7" title="7"><span class="co">##     Min       1Q   Median       3Q      Max  </span></a>
+<a class="sourceLine" id="cb36-8" title="8"><span class="co">## -3.9453  -0.9165  -0.1116   0.9083   4.0983  </span></a>
+<a class="sourceLine" id="cb36-9" title="9"><span class="co">## </span></a>
+<a class="sourceLine" id="cb36-10" title="10"><span class="co">## Coefficients:</span></a>
+<a class="sourceLine" id="cb36-11" title="11"><span class="co">##              Estimate Std. Error t value Pr(&gt;|t|)    </span></a>
+<a class="sourceLine" id="cb36-12" title="12"><span class="co">## (Intercept)   2.04012    0.20636   9.886 2.61e-16 ***</span></a>
+<a class="sourceLine" id="cb36-13" title="13"><span class="co">## x1            0.11068    0.02361   4.688 9.12e-06 ***</span></a>
+<a class="sourceLine" id="cb36-14" title="14"><span class="co">## L1          -11.06774    1.09401 -10.117  &lt; 2e-16 ***</span></a>
+<a class="sourceLine" id="cb36-15" title="15"><span class="co">## L2           25.40082    0.78080  32.532  &lt; 2e-16 ***</span></a>
+<a class="sourceLine" id="cb36-16" title="16"><span class="co">## ---</span></a>
+<a class="sourceLine" id="cb36-17" title="17"><span class="co">## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></a>
+<a class="sourceLine" id="cb36-18" title="18"><span class="co">## </span></a>
+<a class="sourceLine" id="cb36-19" title="19"><span class="co">## (Dispersion parameter for gaussian family taken to be 2.067102)</span></a>
+<a class="sourceLine" id="cb36-20" title="20"><span class="co">## </span></a>
+<a class="sourceLine" id="cb36-21" title="21"><span class="co">##     Null deviance: 2965.92  on 99  degrees of freedom</span></a>
+<a class="sourceLine" id="cb36-22" title="22"><span class="co">## Residual deviance:  198.44  on 96  degrees of freedom</span></a>
+<a class="sourceLine" id="cb36-23" title="23"><span class="co">## AIC: 362.32</span></a>
+<a class="sourceLine" id="cb36-24" title="24"><span class="co">## </span></a>
+<a class="sourceLine" id="cb36-25" title="25"><span class="co">## Number of Fisher Scoring iterations: 2</span></a>
+<a class="sourceLine" id="cb36-26" title="26"><span class="kw">BIC</span>(resB1<span class="op">$</span>result)</a>
+<a class="sourceLine" id="cb36-27" title="27"><span class="co">## [1] 375.3461</span></a>
+<a class="sourceLine" id="cb36-28" title="28"><span class="kw">fitted</span>(resF1<span class="op">$</span>result)[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]</a>
+<a class="sourceLine" id="cb36-29" title="29"><span class="co">##         1         2         3         4         5         6         7         8 </span></a>
+<a class="sourceLine" id="cb36-30" title="30"><span class="co">## 17.515084 17.515084  1.931324  1.931324  6.116991  6.116991 -3.618455 -3.618455 </span></a>
+<a class="sourceLine" id="cb36-31" title="31"><span class="co">##         9        10 </span></a>
+<a class="sourceLine" id="cb36-32" title="32"><span class="co">##  2.579123  2.579123</span></a>
+<a class="sourceLine" id="cb36-33" title="33"><span class="kw">residuals</span>(resF1<span class="op">$</span>result)[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]</a>
+<a class="sourceLine" id="cb36-34" title="34"><span class="co">##           1           2           3           4           5           6 </span></a>
+<a class="sourceLine" id="cb36-35" title="35"><span class="co">##  0.82133235  0.65286713  0.01963192 -0.84277194  0.69098527 -1.67560150 </span></a>
+<a class="sourceLine" id="cb36-36" title="36"><span class="co">##           7           8           9          10 </span></a>
+<a class="sourceLine" id="cb36-37" title="37"><span class="co">##  1.01085931 -1.20498043  0.12104466  1.27277387</span></a>
+<a class="sourceLine" id="cb36-38" title="38"><span class="kw">class</span>(resB1<span class="op">$</span>result)</a>
+<a class="sourceLine" id="cb36-39" title="39"><span class="co">## [1] &quot;glm&quot; &quot;lm&quot;</span></a>
+<a class="sourceLine" id="cb36-40" title="40"><span class="kw">class</span>(resF1<span class="op">$</span>result)</a>
+<a class="sourceLine" id="cb36-41" title="41"><span class="co">## [1] &quot;glm&quot; &quot;lm&quot;</span></a></code></pre></div>
+</div>
+<div id="further-developments" class="section level2">
 <h2>Further developments</h2>
-
 <ul>
 <li>Function to deal with GIS raster files instead of shape files.</li>
 <li>Estimated varoances for buffer sizes and SIF values.</li>
 <li>Multiyear SIF approach</li>
 </ul>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 
 </body>
-
 </html>

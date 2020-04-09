@@ -4,29 +4,29 @@ Bsiland<-function(formula,land,data,family="gaussian",init=200,border=F)
   #land : a list of gis files (in case of several years) or one gis file (for one year)
   #for the presence  of a landscape variable. The length of land list is the number of landscape varibale
   #data : a data frame for observations
-  
+
   # check arguments
 
-  if (is.character(family)) 
+  if (is.character(family))
   {
     family <- get(family, mode = "function", envir = parent.frame())
   }
-  if (is.function(family)) 
+  if (is.function(family))
     family <- family()
   if (is.null(family$family)) {
     print(family)
     stop("'family' not recognized")
   }
-  
- 
-  
+
+
+
   if(class(land)[1]!="list")
     land=list(land)
   sfGIS=lapply(land,st_as_sf)
-  
+
   if(class(data)[1]!="list")
     data=list(data)
-  
+
   if(length(data)!=length(land))
     stop("The number of datasets for argument data have to be equal to the number of GIS objects for argument land")
   #test on column names for data
@@ -40,11 +40,11 @@ Bsiland<-function(formula,land,data,family="gaussian",init=200,border=F)
         stop("Column names for data are not the same.")
     }
   }
-  
+
   if(sum(datanames%in%c("X","Y"))!=2)
     stop("Error: colnames X and Y for observations are not available in data argument")
-  
- 
+
+
   model=as.formula(formula)
   modelType="GLM"
   termMix=findbars(model)
@@ -55,48 +55,52 @@ Bsiland<-function(formula,land,data,family="gaussian",init=200,border=F)
     else
       modelType="GLMM"
   }
-  
-  
+
+
   ##### extract local and landscapes variables
   landnames=names(sfGIS[[1]])
   termMix=findbars(model)
-  
 
-  
+
+
   #labels(terms(model))
-  
+
   allvars=all.vars(model)
   allvars=all.vars(model)
   vary=allvars[1]
   allvars=allvars[-1]
-  
+
   #localvars=datanames[datanames%in%allvars]
   #landvars=landnames[landnames%in%allvars]
-  
+
   localvars=allvars[allvars%in%datanames]
   landvars=allvars[allvars%in%landnames]
-  
-  cat("Local variables: ")
-  cat(paste(localvars,sep=" "))
-  cat("\n")
+
+  mess.1="Local variables:"
+  mess.2=paste(localvars,collapse = " ")
+  message(paste(mess.1,mess.2,sep=" "))
+  #print("Local variables: ")
+  #print(paste(localvars,sep=" "))
+  #print("\n")
   #extract landscape variables
   if(length(landvars)==0)
-    stop("No landscape variable in the model")  
-  cat("Landscape variables: ")
-  cat(paste(landvars,sep=" "))
-  cat("\n")
-  
-  
+    stop("No landscape variable in the model")
+  mess.1="Landscape variables:"
+  mess.2=paste(landvars,collapse=" ")
+  message(paste(mess.1,mess.2,sep=" "))
+  #print("\n")
+
+
   if(length(localvars)==0)
     model0=as.formula(paste(vary,"~1"))
   labelsFormula=labels(terms(nobars(model)))
-  
+
   sel=NULL
   for(j in 1:length(labelsFormula))
   {
     finteraction=sum(grep(":",labelsFormula[j]))
     if(finteraction==0)
-      sel=c(sel,labelsFormula[j]%in%datanames)  
+      sel=c(sel,labelsFormula[j]%in%datanames)
     else
     {
       u=unlist(strsplit(labelsFormula[j],":"))
@@ -106,7 +110,7 @@ Bsiland<-function(formula,land,data,family="gaussian",init=200,border=F)
         sel=c(sel,T)
     }
   }
-  
+
   if(is.null(termMix))
   {
     if(length(localvars)>0)
@@ -114,7 +118,7 @@ Bsiland<-function(formula,land,data,family="gaussian",init=200,border=F)
     else
       model0=as.formula(paste(paste(vary,"~",sep=""),paste("1",collapse="+"),sep="" ) )
   }
-  
+
   if(!is.null(termMix))
   {
     if(length(localvars)>0)
@@ -122,16 +126,19 @@ Bsiland<-function(formula,land,data,family="gaussian",init=200,border=F)
     else
       model0=as.formula( paste(paste(vary,"~",sep="") ,paste(parens(termMix),collapse="+")  ,sep=" " ) )
   }
-  
-  cat("Model: ")
-  print(model,showEnv=F)
-  
-  cat("Model0: ")
-  print(model0,showEnv=F)
-  
-  
-  ##### end extrcat local and landscape variables 
-  
+
+  mess.1="Model:"
+  mess.2=Reduce(paste, deparse(model))
+  message(paste(mess.1,mess.2,sep=" "))
+
+  mess.1="Model0:"
+  mess.2=Reduce(paste, deparse(model0))
+  message(paste(mess.1,mess.2,sep=" "))
+
+
+
+  ##### end extrcat local and landscape variables
+
   #initialisation algorithm
   if(is.null(init))
     init=rep(50,length(landvars))
@@ -139,9 +146,9 @@ Bsiland<-function(formula,land,data,family="gaussian",init=200,border=F)
     init=rep(init,length(landvars))
   if(length(init)>1 & (length(init)!=length(landvars)))
 stop("Probelem : length(init) and length(landnames) has to be equal.")
-  
-  
-  
+
+
+
   #transform dataframe data in sf object
   loc.sf=list(NULL)
   for(i in 1:length(data))
@@ -150,8 +157,8 @@ stop("Probelem : length(init) and length(landnames) has to be equal.")
   loc.sf[[i]]=st_as_sf(tmp,coords = c("X","Y"))
   st_crs(loc.sf[[i]])<-st_crs(sfGIS[[i]])$proj4string
   }
-  
-  
+
+
   if(modelType=="GLM")
   {
     myfun=function(d)
@@ -159,7 +166,7 @@ stop("Probelem : length(init) and length(landnames) has to be equal.")
     return(BsilandMinusLoglik(d,data=data,loc.sf=loc.sf,landnames=landvars,sfGIS=sfGIS,formula=model,family=family,border=border))
     }
   }
-  
+
   if(modelType=="LMM")
   {
     myfun=function(d)
@@ -167,7 +174,7 @@ stop("Probelem : length(init) and length(landnames) has to be equal.")
       return(BsilandMinusLoglikLMM(d,data=data,loc.sf=loc.sf,landnames=landvars,sfGIS=sfGIS,formula=model,family=family,border=border))
     }
   }
-  
+
   if(modelType=="GLMM")
   {
     myfun=function(d)
@@ -175,24 +182,24 @@ stop("Probelem : length(init) and length(landnames) has to be equal.")
       return(BsilandMinusLoglikGLMM(d,data=data,loc.sf=loc.sf,landnames=landvars,sfGIS=sfGIS,formula=model,family=family,border=border))
     }
   }
-  
+
   if(length(landvars)>1)
   {
     #resoptim=optim(initSIF,myfun,lower=rep(0,length(land)),method="L-BFGS-B")
     resoptim=optim(init,myfun)
   }
-  
+
   if(length(landvars)==1)
   {
     #resoptim=optimize(myfun,interval=c(0,300000),minimum=T)
     #resoptim$par=resoptim$minimum
-	resoptim=optim(init,myfun,method="Brent",lower=1,upper=5000)
+	resoptim=optim(init,myfun,method="Brent",lower=1,upper=6000)
   }
-  
+
   paramBuffer=resoptim$par
- 
+
   names(paramBuffer)=paste("B.",landvars,sep="")
-  
+
   matB=list(NULL)
   newdata=NULL
   for(i in 1:length(loc.sf))
@@ -206,9 +213,9 @@ stop("Probelem : length(init) and length(landnames) has to be equal.")
   if(modelType=="LMM")
     restmp=lmer(model,data=newdata)
   if(modelType=="GLMM")
-    restmp=glmer(model,data=newdata,family=family)  
-  
-  
+    restmp=glmer(model,data=newdata,family=family)
+
+
   fit=predict(restmp)
   err=residuals(restmp)
   loglik=as.vector(logLik(restmp))
@@ -222,19 +229,19 @@ stop("Probelem : length(init) and length(landnames) has to be equal.")
   {
     resestim=c(restmp$coef ,paramBuffer)
   }
-  
+
   if(modelType=="LMM"||modelType=="GLMM")
   {
     resestim=c(summary(restmp)$coef[,1] ,paramBuffer)
     rand.StdDev=VarCorr(restmp)
   }
- 
+
   nparam=length(resestim)
   if(family$family!="gaussian")
     AIC=2*nparam-2*loglik
   else
     AIC=2*(nparam+1)-2*loglik
- 
+
   #Model with only local variables
   if(modelType=="GLM")
   {
@@ -250,7 +257,7 @@ stop("Probelem : length(init) and length(landnames) has to be equal.")
   }
   loglik0=as.vector(logLik(res0))
   AIC0=as.vector(AIC(res0))
-  
+
   # p.values for model with no landsacpe
   if(family$family!="gaussian")
     pval0=1-pchisq(2*(loglik-loglik0),2*length(landvars))
@@ -262,18 +269,18 @@ stop("Probelem : length(init) and length(landnames) has to be equal.")
     nparam=length(resestim)
   if(modelType=="LMM" || modelType=="GLMM")
     nparam=length(resestim)+nrow(as.data.frame(rand.StdDev))
-  
+
   #pval.local=rep(NULL,length(varx))
   #pval=NULL
   #coefestim=c(coefficients(res),paramBuffer)
-  
+
   resBsiland=list(coefficients=resestim ,parambuffer=paramBuffer, formula=model,buffer=valBuffer,loglik=loglik,loglik0=loglik0,fitted=fit,
                   resoptim=resoptim,result=restmp,AIC=AIC,AIC0=AIC0, nparam=nparam,pval0=pval0,family=family,
                   sd.error=sd.error,modelType=modelType,rand.StdDev=rand.StdDev, err=err,newdata=newdata, border=border)
-  attr(resBsiland,"class") <- "Bsiland" 
+  attr(resBsiland,"class") <- "Bsiland"
   return(resBsiland)
 }
 
 
-  
-  
+
+

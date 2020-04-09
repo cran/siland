@@ -1,17 +1,17 @@
 BsilandMinusLoglikGLMM<-function(d,data,loc.sf,landnames,sfGIS,formula,family,border=F)
 {
-  options(warn=-1)
-  
+  #options(warn=-1)
+
   for(i in 1:length(d))
   {
-    if(d[i]<0) 
+    if(d[i]<0)
     {
       mloglik=10^6
       return(mloglik)
     }
   }
-  
-  
+
+
   matB=list(NULL)
   newdata=NULL
   for(i in 1:length(loc.sf))
@@ -21,14 +21,14 @@ BsilandMinusLoglikGLMM<-function(d,data,loc.sf,landnames,sfGIS,formula,family,bo
   }
   colnames(newdata)=c(colnames(data[[1]]),landnames)
   resout=glmer(formula,data=newdata,family=family)
-  
+
   #if( inherits(rr <- try(glm(formula,data=newdata,family=family), silent = TRUE), "try-error"))
   #  mloglik= 10^6
-  #else  
+  #else
   mloglik=as.numeric(-logLik(resout))
-  options(warn=0)
+  #options(warn=0)
   invisible(return(mloglik))
-  
-  
+
+
 }
 

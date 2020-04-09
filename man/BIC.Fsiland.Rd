@@ -5,8 +5,7 @@
 Bayesian Information criterion
 }
 \description{
-Compute the Bayesian Information Criterion for an object of class Fsiland
-}
+Function computing the Bayesian Information Criterion for an object of class Fsiland, according to the formula -2*loglikelihood+k*npar, with npar the number of parameters of the model and k = log(n) (n being the number of observations).}
 
 \usage{
 \method{BIC}{Fsiland}(object,...)
@@ -20,7 +19,7 @@ Compute the Bayesian Information Criterion for an object of class Fsiland
 }
 
 \value{
-The BIC value
+BIC value
 }
 
 \author{

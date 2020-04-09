@@ -2,30 +2,29 @@
 \alias{dataSiland}
 \docType{data}
 \title{
-A dataframe for simulated data
+Simulated data
 }
 \description{
-A dataframe for simulated observations and local variables.
+Simulated data of response variable and local variables.
 }
 
 \usage{data("dataSiland")}
 \format{
-  A data frame with 98 observations on the following 5 variables.
-  \describe{
-    \item{\code{X}}{location on X-axis}
-    \item{\code{Y}}{location on Y-axis}
-    \item{\code{x1}}{a continous local variable}
-    \item{\code{Id}}{a numeric vector}
-    \item{\code{obs}}{the observed variable}
-  }
-}
+  A data frame with 100 observations on 5 variables.
 
+\tabular{rlll}{
+    [,1] \tab X   \tab numeric \tab location on X-axis \cr
+    [,2] \tab Y \tab numeric \tab location on Y-axis\cr
+    [,3] \tab x1    \tab numeric \tab a continous local variable\cr
+    [,4] \tab Id   \tab numeric \tab identifier\cr
+    [,5] \tab obs    \tab numeric \tab response variable
+  }
+  }
 
 \examples{
-\donttest{
+%\donttest{
 data(dataSiland)
 plot(dataSiland[,c("X","Y")])
-}
-
+%}
 }
 \keyword{datasets}

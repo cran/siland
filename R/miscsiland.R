@@ -1,7 +1,7 @@
 
 #Siland is a R package to estimate spatial infleunce of landscape variables.
 #Copyright (C) 2017  Martin O. <olivier.martin@inra.fr>
-#		     Carpentier F.	
+#		     Carpentier F.
 
 # Siland is free software; you can redistribute it and/or
 #modify it under the terms of the GNU General Public License
@@ -26,7 +26,7 @@ print.Fsiland<-function(x,...){
   cat("Landscape variables: ")
   cat(colnames(x$landcontri))
   cat("\n \n")
-  
+
   cat("Coefficients:\n")
   print(round(x$coefficients,3))
   if(x$modelType=="LMM" ||x$modelType=="GLMM")
@@ -43,10 +43,17 @@ print.Fsiland<-function(x,...){
   cat("\n")
   cat("(No landscape effect) p-value: ")
   if(x$pval0 < 1e-16) cat("<1e-16") else cat(x$pval0)
-  
-  
+  cat("\n")
+
+
+  if(sum(x$paramSIF<(3*x$wd)))
+  {
+    warning("\nIt is recommended that wd is three times smaller than the estimated SIF mean distance. A new estimation with smaller wd should be more appropriate (see argument wd in Fsiland).")
+  }
+
+
   #cat("\t(No landscape effect) p-value: ")
-  #if(x$pval0==0) cat("<1e-16") else cat(x$pval0) 
+  #if(x$pval0==0) cat("<1e-16") else cat(x$pval0)
   #cat("\n")
 }
 
@@ -56,18 +63,25 @@ print.Fsiland<-function(x,...){
 summary.Fsiland<-function(object,...)
 {
   #data farame summary
-  
+
   x<-object
   summaryx=summary(x$result)
   summaryx$call=x$formula
-  
+
   cat("SIF parameters:\n")
   print(round(x$paramSIF,4))
   cat("\n")
   cat("-- Tests are given conditionnaly to the best SIF parameters --" )
   cat("\n")
   print(summaryx)
-  
+
+
+  if(sum(x$paramSIF<(3*x$wd)))
+  {
+    warning("\nIt is recommended that wd is three times smaller than the estimated SIF mean distance. A new estimation with smaller wd should be more appropriate (see argument wd in Fsiland).")
+  }
+
+
 }
 
 
@@ -95,18 +109,18 @@ calcscontri=function(distmoy,Distobs,w=1,sif="exponential")
   contri=list(NULL)
   if(sif=="exponential")
     for(i in 1:p) contri[[i]]= fdispE(Distobs[[i]],distmoy[i])
-  
+
   if(sif=="gaussian")
     for(i in 1:p) contri[[i]]= fdispG(Distobs[[i]],distmoy[i])
-  
+
   if(sif=="uniform")
     for(i in 1:p) contri[[i]]= fdispU(Distobs[[i]],distmoy[i])
- 
+
   scontri=matrix(0,ncol=p,nrow=n)
   for(i in 1:p) scontri[,i]=apply(as.matrix(contri[[i]]),1,sum)
-  
+
   scontric=scontri*w^2
-  
+
   return(scontric)
 }
 
@@ -116,35 +130,35 @@ FsilandMinusLoglik<-function(d,Dist,land,data,formula,sif,family)
 {
   #options(warn=-1)
 #print(d)
-  #compute the minus loglikelihood for parameter  
+  #compute the minus loglikelihood for parameter
   # of fis fucntion, that is the mean distance
   #data are local observations
   #land are list of landscape variables
   for(i in 1:length(d))
   {
-    if(d[i]<0) 
+    if(d[i]<0)
       {
       mloglik=10^6
       return(mloglik)
     }
-    if(d[i]>2000 ) 
-    {
-      mloglik=10^6
-      return(mloglik)
-    }
+    #if(d[i]>2000 )
+    #{
+    #  mloglik=10^6
+    #  return(mloglik)
+    #}
   }
   #w=min(dist(land[[1]][1:10,c("X","Y")]))
   w=sqrt(abs(diff(sort(unique(land[[1]][,1]))[1:2])*diff(sort(unique(land[[1]][,2]))[1:2])))
-  
-  #Dist=calcdist(data,land) 
+
+  #Dist=calcdist(data,land)
   landcontri=calcscontri(distmoy=d,Distobs=Dist,sif=sif,w=w)
   #print(d)
-  
+
   colnames(landcontri)=names(land)
-  newdata=cbind(data,landcontri)  
+  newdata=cbind(data,landcontri)
   if( inherits(rr <- try(glm(as.formula(formula),data=newdata,family=family), silent = TRUE), "try-error"))
     mloglik= 10^6
-  else  
+  else
     mloglik=as.numeric(-logLik(rr))
  # options(warn=0)
   invisible(return(mloglik))
@@ -152,14 +166,14 @@ FsilandMinusLoglik<-function(d,Dist,land,data,formula,sif,family)
 
 FsilandMinusLoglikLMM<-function(d,Dist,land,data,formula,sif,family)
 {
-  options(warn=-1)
-  #compute the minus loglikelihood for parameter  
+  #options(warn=-1)
+  #compute the minus loglikelihood for parameter
   # of fis fucntion, that is the mean distance
   #data are local observations
   #land are list of landscape variables
   for(i in 1:length(d))
   {
-    if(d[i]<0) 
+    if(d[i]<0)
     {
       mloglik=10^6
       return(mloglik)
@@ -167,32 +181,32 @@ FsilandMinusLoglikLMM<-function(d,Dist,land,data,formula,sif,family)
   }
   #w=min(dist(land[[1]][1:10,c("X","Y")]))
   w=sqrt(abs(diff(sort(unique(land[[1]][,1]))[1:2])*diff(sort(unique(land[[1]][,2]))[1:2])))
-  
-  Dist=calcdist(data,land) 
+
+  Dist=calcdist(data,land)
   #landcontri=calcscontri(distmoy=d,Distobs=Dist,sif=sif,w=w)
   landcontri=calcscontri(distmoy=d,Distobs=Dist,sif=sif,w=w)
   colnames(landcontri)=names(land)
-  newdata=cbind(data,landcontri)  
+  newdata=cbind(data,landcontri)
   if( inherits(rr <- try(lmer(as.formula(formula),data=newdata,REML=F), silent = TRUE), "try-error"))
     mloglik= 10^6
-  else  
+  else
     mloglik=as.numeric(-logLik(rr))
-  
-  options(warn=0)
-  
+
+  #options(warn=0)
+
   invisible(return(mloglik))
 }
 
 FsilandMinusLoglikGLMM<-function(d,Dist,land,data,formula,sif,family)
 {
-  options(warn=-1)
-  #compute the minus loglikelihood for parameter  
+  #options(warn=-1)
+  #compute the minus loglikelihood for parameter
   # of fis fucntion, that is the mean distance
   #data are local observations
   #land are list of landscape variables
   for(i in 1:length(d))
   {
-    if(d[i]<0) 
+    if(d[i]<0)
     {
       mloglik=10^6
       return(mloglik)
@@ -200,17 +214,17 @@ FsilandMinusLoglikGLMM<-function(d,Dist,land,data,formula,sif,family)
   }
   #w=min(dist(land[[1]][1:10,c("X","Y")]))
   w=sqrt(abs(diff(sort(unique(land[[1]][,1]))[1:2])*diff(sort(unique(land[[1]][,2]))[1:2])))
-  
-  Dist=calcdist(data,land) 
+
+  Dist=calcdist(data,land)
   landcontri=calcscontri(distmoy=d,Distobs=Dist,sif=sif,w=w)
   #landcontri=calcscontri(distmoy=d,Distobs=Dist,sif=sif)
   colnames(landcontri)=names(land)
-  newdata=cbind(data,landcontri)  
+  newdata=cbind(data,landcontri)
   if( inherits(rr <- try(glmer(as.formula(formula),data=newdata,family=family), silent = TRUE), "try-error"))
     mloglik= 10^6
-  else  
+  else
     mloglik=as.numeric(-logLik(rr))
-  options(warn=0)
+  #options(warn=0)
   invisible(return(mloglik))
 }
 
@@ -220,38 +234,38 @@ FsilandMinusLoglikGLMM<-function(d,Dist,land,data,formula,sif,family)
 
 
 fdispE=function(x,dmoy){
-  #compute density for exponential sif 
+  #compute density for exponential sif
   alpha=dmoy/2
-  (1/(2*pi*alpha^2))*exp(-x/alpha)   
+  (1/(2*pi*alpha^2))*exp(-x/alpha)
 }
 
 fdispG=function(x,dmoy){
-  #compute density for gaussian sif 
+  #compute density for gaussian sif
   alpha=dmoy/gamma(3/2)
-  (1/(alpha^2*pi))*exp(-(x/alpha)^2)   
+  (1/(alpha^2*pi))*exp(-(x/alpha)^2)
 }
 
 fdispU=function(x,dmoy){
-  #compute density for uniform sif 
+  #compute density for uniform sif
   alpha=3*dmoy/2
   w=x
   s=(x<=alpha)
   w[s]=1/(pi*alpha^2)
   w[!s]=0
   return(w)
-  
+
 }
 
 fdispRE=function(r,dmoy){
   #compute radius density for exponential fis function
   alpha=dmoy/2
-  (r/(alpha^2))*exp(-r/alpha)   
+  (r/(alpha^2))*exp(-r/alpha)
 }
 
 fdispRG=function(r,dmoy){
   #compute radius density for gaussian fis function
   alpha=dmoy/gamma(3/2)
-  (2/alpha^2)*r*exp(-r^2/alpha^2)   
+  (2/alpha^2)*r*exp(-r^2/alpha^2)
 }
 
 fdispRU=function(r,dmoy){
@@ -265,13 +279,13 @@ fdispRU=function(r,dmoy){
 
 
 quantileE=function(q=0.9,dm,l=3000)
-{  
+{
   #Find quantile for radius distribution for exponential fis
   vv=seq(0,4*dm,length=l)
   pas=vv[2]-vv[1]
   cc=0
   for(i in 1:length(vv))
-  {  
+  {
     tmp=fdispRE(vv[i],dm)*pas
     cc=cc+tmp
     if(cc>q)
@@ -283,13 +297,13 @@ quantileE=function(q=0.9,dm,l=3000)
 }
 
 quantileG=function(q=0.9,dm,l=3000)
-{ 
+{
   #Find quantile for radius distribution for gaussian fis
   vv=seq(0,4*dm,length=l)
   pas=vv[2]-vv[1]
   cc=0
   for(i in 1:length(vv))
-  {  
+  {
     tmp=fdispRG(vv[i],dm)*pas
     cc=cc+tmp
     if(cc>q)
@@ -301,13 +315,13 @@ quantileG=function(q=0.9,dm,l=3000)
 }
 
 quantileU=function(dm,q=0.9,l=3000)
-{  
+{
   #Find quantile for radius distribution for uniform fis
   vv=seq(0,5*dm,length=l)
   pas=vv[2]-vv[1]
   cc=0
   for(i in 1:length(vv))
-  {  
+  {
     tmp=fdispRU(vv[i],dm)*pas
     cc=cc+tmp
     #print(cc)
@@ -324,37 +338,37 @@ quantileU=function(dm,q=0.9,l=3000)
   parens <- function(x) paste0("(",x,")")
 
 
-leg.col <- function(colr, niv){
-#add bar color scale for plotcontri  
-  n <- length(colr)
-  bx <- par("usr")
-  box.cx <- c(bx[2] + (bx[2] - bx[1]) / 1000,
-              bx[2] + (bx[2] - bx[1]) / 1000 + (bx[2] - bx[1]) / 50)
+#leg.col <- function(colr, niv){
+#add bar color scale for plotcontri
+ # n <- length(colr)
+#  bx <- par("usr")
+#  box.cx <- c(bx[2] + (bx[2] - bx[1]) / 1000,
+   #           bx[2] + (bx[2] - bx[1]) / 1000 + (bx[2] - bx[1]) / 50)
   #box.cx <- c(bx[2] + (bx[2] - bx[1]) / 1000,
   #            bx[2] + (bx[2] - bx[1]) / 1000 + (bx[2] - bx[1]) / 30)
-  box.cy <- c(bx[3], bx[3])
-  box.sy <- (bx[4] - bx[3]) / n
-  
-  xx <- rep(box.cx, each = 2)
-  
-  par(xpd = TRUE)
-  for(i in 1:n){
-    
-    yy <- c(box.cy[1] + (box.sy * (i - 1)),
-            box.cy[1] + (box.sy * (i)),
-            box.cy[1] + (box.sy * (i)),
-            box.cy[1] + (box.sy * (i - 1)))
-    polygon(xx, yy, col = colr[i], border = colr[i])
-    
-  }
-  par(new = TRUE)
-  plot(0, 0, type = "n",
-       ylim = c(min(niv), max(niv)),
-       yaxt = "n", ylab = "",
-       xaxt= "n", xlab = "",
-       frame.plot = FALSE)
-  axis(side = 4, las = 2, tick = FALSE, line = 0.3)
+ # box.cy <- c(bx[3], bx[3])
+  #box.sy <- (bx[4] - bx[3]) / n
+
+  #xx <- rep(box.cx, each = 2)
+
+  #par(xpd = TRUE)
+  #for(i in 1:n){
+
+   # yy <- c(box.cy[1] + (box.sy * (i - 1)),
+  #          box.cy[1] + (box.sy * (i)),
+   #         box.cy[1] + (box.sy * (i)),
+  #          box.cy[1] + (box.sy * (i - 1)))
+   # polygon(xx, yy, col = colr[i], border = colr[i])
+
+  #}
+  #par(new = TRUE)
+  #plot(0, 0, type = "n",
+  #     ylim = c(min(niv), max(niv)),
+  #     yaxt = "n", ylab = "",
+  #     xaxt= "n", xlab = "",
+  #     frame.plot = FALSE)
+  #axis(side = 4, las = 2, tick = FALSE, line = 0.3)
   #axis(side = 4, las = 2, tick = FALSE, line = .25)
-}
+ #}
 
 
