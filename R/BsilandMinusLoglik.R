@@ -8,16 +8,16 @@ BsilandMinusLoglik<-function(d,data,loc.sf,landnames,sfGIS,formula,family,border
 
   for(i in 1:length(d))
   {
-    if(d[i]<0 )
+    if(d[i]<1 )
     {
       mloglik=10^6
       return(mloglik)
     }
-   # if(d[i]>7000 )
-  #  {
-  #    mloglik=10^6
-  #    return(mloglik)
-  #  }
+    #if(d[i]>2000 )
+    #{
+    #  mloglik=10^6
+    #  return(mloglik)
+    #}
   }
 
   matB=list(NULL)
@@ -34,7 +34,7 @@ BsilandMinusLoglik<-function(d,data,loc.sf,landnames,sfGIS,formula,family,border
   #  mloglik= 10^6
   #else
     mloglik=as.numeric(-logLik(resout))
-  #options(warn=0)
+  options(warn=0)
   invisible(return(mloglik))
 }
 

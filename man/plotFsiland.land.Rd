@@ -50,19 +50,17 @@ an object of class ggplot
 Fsiland
 }
 \examples{
-%\donttest{
+\donttest{
 data(dataSiland)
 data(landSiland)
-data(resF1)
-#resF1 has been pre-computed and is the result from the following command
-#resF1=Fsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland,sif="exponential")
-plotFsiland.land(x=resF1,land=landSiland,data=dataSiland,lw=20)
-plotFsiland.land(x=resF1,land=landSiland,data=dataSiland,var=1,lw=20)
-plotFsiland.land(x=resF1,land=landSiland,data=dataSiland,var=2,lw=20)
+resF=Fsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland,sif="exponential")
+plotFsiland.land(x=resF,land=landSiland,data=dataSiland)
+plotFsiland.land(x=resF,land=landSiland,data=dataSiland,var=1,lw=20)
+plotFsiland.land(x=resF,land=landSiland,data=dataSiland,var=2,lw=20)
 
-%}
+
 }
-
+}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 %\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")

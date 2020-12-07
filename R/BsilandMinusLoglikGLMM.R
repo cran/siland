@@ -1,10 +1,10 @@
 BsilandMinusLoglikGLMM<-function(d,data,loc.sf,landnames,sfGIS,formula,family,border=F)
 {
-  #options(warn=-1)
+  options(warn=-1)
 
   for(i in 1:length(d))
   {
-    if(d[i]<0)
+    if(d[i]<1)
     {
       mloglik=10^6
       return(mloglik)
@@ -26,7 +26,7 @@ BsilandMinusLoglikGLMM<-function(d,data,loc.sf,landnames,sfGIS,formula,family,bo
   #  mloglik= 10^6
   #else
   mloglik=as.numeric(-logLik(resout))
-  #options(warn=0)
+  options(warn=0)
   invisible(return(mloglik))
 
 

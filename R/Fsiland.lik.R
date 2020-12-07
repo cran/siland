@@ -30,7 +30,7 @@ Fsiland.lik<-function(res,land,data,varnames=NULL,seqd=seq(2,2000,length=10))
   {
     tmp=data[[i]][,c("X","Y")]
     loc.sf[[i]]=st_as_sf(tmp,coords = c("X","Y"))
-    st_crs(loc.sf[[i]])<-st_crs(sfGIS[[i]])$proj4string
+    st_crs(loc.sf[[i]])<-st_crs(sfGIS[[i]])
   }
 
   datanames<-names(data[[1]])

@@ -32,11 +32,8 @@ Fsiland
 \donttest{
 data(dataSiland)
 data(landSiland)
-data(resF1)
-#resF1 has been pre-computed and is the result for the following command
-#resF1=Fsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland,sif="exponential")
-
-plotFsiland.sif(x=resF1)
+resF=Fsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland,sif="exponential")
+plotFsiland.sif(x=resF)
 }
 
 }

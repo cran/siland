@@ -4,29 +4,31 @@ landtoraster<-function(landgis,landname,wd,data=NULL)
     border=T
   else
     border=F
-  
+
   if(border==F)
   {
     lobs=list(NULL)
     extentLand=st_bbox(landgis)
     for (i in 1:length(landname))
     {
-    
-    r=raster(landgis,nrow=round((extentLand["ymax"]-extentLand["ymin"])/wd), ncol=round((extentLand["xmax"]-extentLand["xmin"])/wd),ext=extent(landgis))
+
+    #r=raster(landgis,nrow=round((extentLand["ymax"]-extentLand["ymin"])/wd), ncol=round((extentLand["xmax"]-extentLand["xmin"])/wd),ext=extent(landgis))
+    r=raster(nrow=round((extentLand["ymax"]-extentLand["ymin"])/wd), ncol=round((extentLand["xmax"]-extentLand["xmin"])/wd),ext=extent(landgis))
+    raster::crs(r)<-st_crs(landgis)
     rland=fasterize(landgis,r,field=landname[i],fun='max')
     rlandpos=as.data.frame(rasterToPoints(rland))
-    #only pixels different from zero are kept 
+    #only pixels different from zero are kept
     rlandpos=rlandpos[rlandpos[,3]!=0,]
     colnames(rlandpos)=c("X","Y",landname[i])
     lobs[[i]]=rlandpos
     }
    resraster=lobs
   }
-  
+
   if(border==T)
   {
     loc.sf=st_as_sf(as.data.frame(data),coords = c("X","Y"))
-    st_crs(loc.sf)<-st_crs(landgis)$proj4string
+    st_crs(loc.sf)<-st_crs(landgis)
     resraster=list(NULL)
     for(k in 1:length(landname))
     {
@@ -39,8 +41,8 @@ landtoraster<-function(landgis,landname,wd,data=NULL)
       resraster[[k]]=landtoraster(tmpsig,landname = landname[k],wd=wd)[[1]]
     }
   }
-  
+
   names(resraster)=landname
   return(landtable=resraster)
-  
+
 }

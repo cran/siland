@@ -22,9 +22,9 @@ Simulated data of response variable and local variables.
   }
 
 \examples{
-%\donttest{
+\donttest{
 data(dataSiland)
 plot(dataSiland[,c("X","Y")])
-%}
+}
 }
 \keyword{datasets}

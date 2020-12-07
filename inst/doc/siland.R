@@ -1,6 +1,5 @@
 ## ----echo = FALSE, message = FALSE--------------------------------------------
-knitr::opts_chunk$set(collapse=T,
-                      cache=F,eval=T)
+knitr::opts_chunk$set(collapse=T,cache=F,eval=T)
 #
 #knitr::opts_chunk$set(eval = FALSE)
 # options(width = 120, max.print = 100)
@@ -14,7 +13,7 @@ data(dataSiland)
 data(landSiland)
 
 ## ----eval=T-------------------------------------------------------------------
-data(list=c("likresB1","resB1","resB2","resB3","resF1","resF3","resF4","resF5-1","resF5-2","resY"))
+data("likresB1","resB1","resB2","resB3","resF1","resF3","resF4","resF5.1","resF5.2","resY")
 
 ## -----------------------------------------------------------------------------
 str(dataSiland)

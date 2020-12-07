@@ -5,7 +5,7 @@
 Quantile of  spatial influence function (SIF)
 }
 \description{
-function computing quantiles of SIF, i.e. the radius of disk on which the integrated influence of the SIF is equal to given proportions, \command{p}. Calculations are performed for the estimated SIF of each landscape variable in \command{x}.The \bold{area of medium influence and significant influence of a landscape variable}, that we defined as the disc containing 50\% and 95\% of the influence of the SIF (neglecting 50\% and 5\% of its broader effect) respectively can be computed using argument \command{ p = 0.5} and \command{ p = 0.95}, respectively.
+function computing quantiles of SIF, i.e. the radius of disk on which the integrated influence of the SIF is equal to given proportions, \command{p}. Calculations are performed for the estimated SIF of each landscape variable in \command{x}.The \bold{area of medium influence and significant influence of a landscape variable}, that we defined as the disc containing 50\% and 95\% of the influence of the SIF (neglecting 50\% and 5\% of its broader effect) respectively can be computed using argument \command{ p = 0.5} and \command{ p = 0.95}, respectively. 
 }
 \usage{
 Fsiland.quantile(x, p = 0.95)

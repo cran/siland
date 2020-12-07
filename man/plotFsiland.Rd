@@ -5,7 +5,7 @@
 Plot results from Fsiland function
 }
 \description{
-Plot locations of observed data and locations of landscape variables. The black points correspond to the locations of observed data, and the size is propotional to numeric values. The locations of different landscape variables are displayed with small points of different colours. Estimated mean distance of spatial influence for each landscape variable is indicated beside the graphic with a continuous line. Dashed line indicates the radius that gives 95 percent of the total influence of each landscape variable.
+Plot locations of observed data and locations of landscape variables. The black points correspond to the locations of observed data, and the size is propotional to numeric values. The locations of different landscape variables are displayed with small points of different colours. Estimated mean distance of spatial influence for each landscape variable is indicated beside the graphic with a continuous line. Dashed line indicates the radius that gives 95 percent of the total influence of each landscape variable. 
 }
 \usage{
 plotFsiland(res, land, data)
@@ -32,16 +32,12 @@ an object of class ggplot
 
 
 \examples{
-%\donttest{
+\donttest{
 data(dataSiland)
 data(landSiland)
-data(resF1)
-#resF1 has been pre-computed and is the result from the following command
-#resF1=Fsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland,sif="exponential")
-
-plotFsiland(resF1,landSiland, dataSiland)
-%}
-
+resF=Fsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland,sif="exponential")
+plotFsiland(resF,landSiland, dataSiland)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

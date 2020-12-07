@@ -60,24 +60,21 @@ O. Martin and F. Carpentier
 
 
 \examples{
-%\donttest{
+\donttest{
 data(dataSiland)
 data(landSiland)
-data(resF1)
-#resF1 has been pre-computed and is the result from the following command
-#resF1=Fsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland,sif="exponential")
-
-Fsiland.lik(resF1,dataSiland,land=landSiland,varnames=c("L1","L2"),seqd=seq(20,300,length=6))
+resF=Fsiland(obs~x1+L1+L2,data=dataSiland,land=landSiland)
+Fsiland.lik(resF,dataSiland,land=landSiland,varnames=c("L1","L2"),seqd=seq(5,500,length=20))
 
 # Illustration of failed estimation caused by wrong initial
 # values (chosen initial values that are deliberately and obviously far too high)
 # In a such case, the estimation should be done again ,
 # by  calling Fsiland with init=c(250,250) for instance.
 
-#resF2=Fsiland(obs~x1+L1+L2,data=dataSiland,land=landSiland,init=c(20000,20000),wd=100)
-#Fsiland.lik(resF2,dataSiland,land=landSiland,varnames=c("L1","L2"),seqd=seq(1e9,1e10,length=20))
+resF2=Fsiland(obs~x1+L1+L2,data=dataSiland,land=landSiland,init=c(20000,20000))
+Fsiland.lik(resF2,dataSiland,land=landSiland,varnames=c("L1","L2"),seqd=seq(1e9,1e10,length=20))
 
-%}
+}
 }
 
 

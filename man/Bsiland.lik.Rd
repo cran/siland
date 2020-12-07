@@ -64,18 +64,15 @@ O. Martin and F. Carpentier
 \donttest{
 data(dataSiland)
 data(landSiland)
-data(resB1)
-#resB1 has been pre-computed and is the result from the following command
-#resB1=Bsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland)
-
-Bsiland.lik(resB1,dataSiland,land=landSiland,varnames=c("L1","L2"),seqd=seq(5,50,length=10))
+resB=Bsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland)
+Bsiland.lik(resB,dataSiland,land=landSiland,varnames=c("L1","L2"),seqd=seq(5,500,length=20))
 
 # Illustration of failed estimation caused by wrong initial values.
 # In a such case, the estimation should be done again ,
 # by  calling Bsiland with init=c(250,250) for instance.
 
-#resB_fail=Bsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland,init=c(2000,2000))
-#Bsiland.lik(resB_fail,dataSiland,land=landSiland,varnames=c("L1","L2"),seqd=seq(5,3000,length=20))
+resB_fail=Bsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland,init=c(2000,2000))
+Bsiland.lik(resB_fail,dataSiland,land=landSiland,varnames=c("L1","L2"),seqd=seq(5,3000,length=20))
 
 }
 }

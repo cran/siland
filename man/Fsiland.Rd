@@ -128,15 +128,13 @@ Carpentier, F., & Martin, O. (2019). SILand: an R package for estimating the spa
    }
 
 \examples{
-%\donttest{
+\donttest{
 data(dataSiland)
 data(landSiland)
-data(resF1)
-#resF1 has been pre-computed and is the result from the following command
-#resF1=Fsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland,sif="exponential")
-resF1
-resF1$AIC
-%}
+resF=Fsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland,sif="exponential")
+resF
+resF$AIC
+}
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

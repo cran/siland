@@ -166,7 +166,7 @@ FsilandMinusLoglik<-function(d,Dist,land,data,formula,sif,family)
 
 FsilandMinusLoglikLMM<-function(d,Dist,land,data,formula,sif,family)
 {
-  #options(warn=-1)
+  options(warn=-1)
   #compute the minus loglikelihood for parameter
   # of fis fucntion, that is the mean distance
   #data are local observations
@@ -192,14 +192,14 @@ FsilandMinusLoglikLMM<-function(d,Dist,land,data,formula,sif,family)
   else
     mloglik=as.numeric(-logLik(rr))
 
-  #options(warn=0)
+  options(warn=0)
 
   invisible(return(mloglik))
 }
 
 FsilandMinusLoglikGLMM<-function(d,Dist,land,data,formula,sif,family)
 {
-  #options(warn=-1)
+  options(warn=-1)
   #compute the minus loglikelihood for parameter
   # of fis fucntion, that is the mean distance
   #data are local observations
@@ -224,7 +224,7 @@ FsilandMinusLoglikGLMM<-function(d,Dist,land,data,formula,sif,family)
     mloglik= 10^6
   else
     mloglik=as.numeric(-logLik(rr))
-  #options(warn=0)
+  options(warn=0)
   invisible(return(mloglik))
 }
 
@@ -338,37 +338,37 @@ quantileU=function(dm,q=0.9,l=3000)
   parens <- function(x) paste0("(",x,")")
 
 
-#leg.col <- function(colr, niv){
+leg.col <- function(colr, niv){
 #add bar color scale for plotcontri
- # n <- length(colr)
-#  bx <- par("usr")
-#  box.cx <- c(bx[2] + (bx[2] - bx[1]) / 1000,
-   #           bx[2] + (bx[2] - bx[1]) / 1000 + (bx[2] - bx[1]) / 50)
+  n <- length(colr)
+  bx <- par("usr")
+  box.cx <- c(bx[2] + (bx[2] - bx[1]) / 1000,
+              bx[2] + (bx[2] - bx[1]) / 1000 + (bx[2] - bx[1]) / 50)
   #box.cx <- c(bx[2] + (bx[2] - bx[1]) / 1000,
   #            bx[2] + (bx[2] - bx[1]) / 1000 + (bx[2] - bx[1]) / 30)
- # box.cy <- c(bx[3], bx[3])
-  #box.sy <- (bx[4] - bx[3]) / n
+  box.cy <- c(bx[3], bx[3])
+  box.sy <- (bx[4] - bx[3]) / n
 
-  #xx <- rep(box.cx, each = 2)
+  xx <- rep(box.cx, each = 2)
 
-  #par(xpd = TRUE)
-  #for(i in 1:n){
+  par(xpd = TRUE)
+  for(i in 1:n){
 
-   # yy <- c(box.cy[1] + (box.sy * (i - 1)),
-  #          box.cy[1] + (box.sy * (i)),
-   #         box.cy[1] + (box.sy * (i)),
-  #          box.cy[1] + (box.sy * (i - 1)))
-   # polygon(xx, yy, col = colr[i], border = colr[i])
+    yy <- c(box.cy[1] + (box.sy * (i - 1)),
+            box.cy[1] + (box.sy * (i)),
+            box.cy[1] + (box.sy * (i)),
+            box.cy[1] + (box.sy * (i - 1)))
+    polygon(xx, yy, col = colr[i], border = colr[i])
 
-  #}
-  #par(new = TRUE)
-  #plot(0, 0, type = "n",
-  #     ylim = c(min(niv), max(niv)),
-  #     yaxt = "n", ylab = "",
-  #     xaxt= "n", xlab = "",
-  #     frame.plot = FALSE)
-  #axis(side = 4, las = 2, tick = FALSE, line = 0.3)
+  }
+  par(new = TRUE)
+  plot(0, 0, type = "n",
+       ylim = c(min(niv), max(niv)),
+       yaxt = "n", ylab = "",
+       xaxt= "n", xlab = "",
+       frame.plot = FALSE)
+  axis(side = 4, las = 2, tick = FALSE, line = 0.3)
   #axis(side = 4, las = 2, tick = FALSE, line = .25)
- #}
+}
 
 

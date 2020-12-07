@@ -5,7 +5,7 @@
 Map of Bsiland result
 }
 \description{
-Function creating a map of Bsiland result, i.e. buffers estimations for each landscape variable.
+Function creating a map of Bsiland result, i.e. buffers estimations for each landscape variable. 
 }
 \usage{
 plotBsiland.land(x, land, data, var = 1,landviz=F )
@@ -22,7 +22,7 @@ the object of class sf describing the landscape variable, i.e. the \command{land
 the dataframe describing response variable and the local variables, i.e. the  \command{data} argument in the call to the Bsiland function that computed \command{x}.
 }
   \item{var}{
-  a vector containing the numbers (numeric) of the mapped landscape variables.
+  a vector containing the numbers (numeric) of the mapped landscape variables. 
 }
   \item{landviz}{
 If landviz=T (by default), polygons where the variable \command{var} is observed are colored in gray.
@@ -32,7 +32,7 @@ If landviz=T (by default), polygons where the variable \command{var} is observed
 }
 
 \value{
-a ggplot of class of the landscape effect estimated in the \command{Bsiland} object x i.e. a map of buffers.
+a ggplot of class of the landscape effect estimated in the \command{Bsiland} object x i.e. a map of buffers. 
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
@@ -41,15 +41,13 @@ a ggplot of class of the landscape effect estimated in the \command{Bsiland} obj
 Bsiland
 }
 \examples{
-%\donttest{
+\donttest{
 data(dataSiland)
 data(landSiland)
-data(resB1)
-#resB1 has been pre-computed and is the result from the following command
-#resB1=Bsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland)
-plotBsiland.land(x=resB1,land=landSiland,data=dataSiland)
-plotBsiland.land(x=resB1,land=landSiland,data=dataSiland,var=2)
-%}
+resB=Bsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland)
+plotBsiland.land(x=resB,land=landSiland,data=dataSiland)
+plotBsiland.land(x=resB,land=landSiland,data=dataSiland,var=2)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

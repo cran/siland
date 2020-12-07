@@ -76,19 +76,15 @@ Bsiland<-function(formula,land,data,family="gaussian",init=200,border=F)
   localvars=allvars[allvars%in%datanames]
   landvars=allvars[allvars%in%landnames]
 
-  mess.1="Local variables:"
-  mess.2=paste(localvars,collapse = " ")
-  message(paste(mess.1,mess.2,sep=" "))
-  #print("Local variables: ")
-  #print(paste(localvars,sep=" "))
-  #print("\n")
+  cat("Local variables: ")
+  cat(paste(localvars,sep=" "))
+  cat("\n")
   #extract landscape variables
   if(length(landvars)==0)
     stop("No landscape variable in the model")
-  mess.1="Landscape variables:"
-  mess.2=paste(landvars,collapse=" ")
-  message(paste(mess.1,mess.2,sep=" "))
-  #print("\n")
+  cat("Landscape variables: ")
+  cat(paste(landvars,sep=" "))
+  cat("\n")
 
 
   if(length(localvars)==0)
@@ -127,14 +123,11 @@ Bsiland<-function(formula,land,data,family="gaussian",init=200,border=F)
       model0=as.formula( paste(paste(vary,"~",sep="") ,paste(parens(termMix),collapse="+")  ,sep=" " ) )
   }
 
-  mess.1="Model:"
-  mess.2=Reduce(paste, deparse(model))
-  message(paste(mess.1,mess.2,sep=" "))
+  cat("Model: ")
+  print(model,showEnv=F)
 
-  mess.1="Model0:"
-  mess.2=Reduce(paste, deparse(model0))
-  message(paste(mess.1,mess.2,sep=" "))
-
+  cat("Model0: ")
+  print(model0,showEnv=F)
 
 
   ##### end extrcat local and landscape variables
@@ -150,12 +143,27 @@ stop("Probelem : length(init) and length(landnames) has to be equal.")
 
 
   #transform dataframe data in sf object
+  #and set crs
+  crsinit=st_crs(sfGIS[[1]])
+  for(i in 1:length(sfGIS))
+  {
+  if(is.na(st_crs(sfGIS[[i]])))
+  {
+    st_crs(sfGIS[[i]])<-2154
+  }
+  }
+
   loc.sf=list(NULL)
   for(i in 1:length(data))
   {
   tmp=data[[i]][,c("X","Y")]
   loc.sf[[i]]=st_as_sf(tmp,coords = c("X","Y"))
-  st_crs(loc.sf[[i]])<-st_crs(sfGIS[[i]])$proj4string
+  st_crs(loc.sf[[i]])<-st_crs(sfGIS[[i]])
+  if(st_is_longlat(sfGIS[[i]]))
+  {
+  loc.sf[[i]]=st_transform(loc.sf[[i]],2154)
+  sfGIS[[i]]=st_transform(sfGIS[[i]],2154)
+  }
   }
 
 
@@ -193,7 +201,11 @@ stop("Probelem : length(init) and length(landnames) has to be equal.")
   {
     #resoptim=optimize(myfun,interval=c(0,300000),minimum=T)
     #resoptim$par=resoptim$minimum
-	resoptim=optim(init,myfun,method="Brent",lower=1,upper=6000)
+
+    resoptim=optim(init,myfun,method="Brent",lower=1,upper=6000)
+    #resoptim=nlminb(init,myfun,lower=1,upper=6000)
+    #resoptim$par=resoptim$estimate
+
   }
 
   paramBuffer=resoptim$par

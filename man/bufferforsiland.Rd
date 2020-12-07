@@ -42,7 +42,7 @@ Martin O.
 
 
 \examples{
-%\donttest{
+\donttest{
 data(dataSiland)
 data(landSiland)
 dataSiland[1:10,c("X","Y")]
@@ -51,7 +51,7 @@ landSiland$L2
 
 bufferforsiland(c(100,200),sfGIS=landSiland, loc.sf=dataSiland, landnames=c("L1","L2"))
 
-%}
+}
 
 
 }

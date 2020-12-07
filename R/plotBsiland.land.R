@@ -17,18 +17,36 @@ plotBsiland.land=function(x,land,data,var=1,landviz=F)
 
   #nb=str_sub(names(distb),6)
   nb=unlist(strsplit(names(distb),".",fixed=T))[2]
-  message(paste("Plot for landscape variable ",nb))
-  message("\n")
-  message(distb)
+  cat(paste("Plot for landscape variable ",nb))
+  cat("\n")
+  print(distb)
   nbd=which(colnames(data)==nb)
   param=coef[which(names(coef)==nb)]
   data$Effect=data[,nbd]*param
-
-  ggsf=st_as_sf(land)
-  loc.sf=st_as_sf(data,coords = c("X","Y"))
-  st_crs(loc.sf)<-st_crs(ggsf)$proj4string
+  #nvell version
   landsf=st_as_sf(land)
+  crsinit=st_crs(landsf)
+  if(is.na(crsinit))
+  {
+    st_crs(landsf)<-2154
+  }
 
+  loc.sf=st_as_sf(data[,c("X","Y")],coords = c("X","Y"))
+  st_crs(loc.sf)<-st_crs(landsf)
+  if(st_is_longlat(landsf))
+  {
+    loc.sf=st_transform(loc.sf,2154)
+    landsf=st_transform(landsf,2154)
+  }
+
+  #fin nvlle version
+
+#modif
+  #ggsf=st_as_sf(land)
+  #loc.sf=st_as_sf(data,coords = c("X","Y"))
+  #st_crs(loc.sf)<-st_crs(ggsf)
+  #landsf=st_as_sf(land)
+#fin modif
   mmin=min(data$Effect)
   mmax=max(data$Effect)
   X="X"
@@ -40,12 +58,15 @@ plotBsiland.land=function(x,land,data,var=1,landviz=F)
   {
   buf=st_buffer(loc.sf ,distb)
   buf$Effect=data$Effect
-  p=ggplot(data = loc.sf)+geom_sf(data=buf,aes_string(fill="Effect"),alpha=0.8,col="lightgrey")+
+  p=ggplot(data = loc.sf)+
+    geom_sf(data=buf,aes_string(fill="Effect"),alpha=0.8,col="lightgrey")+
     geom_sf(size=0.8)+
+    coord_sf(crs=st_crs(landsf),datum=st_crs(landsf))+
     scale_fill_gradient2(low = "#0000FF", mid = "white", high = "#CC0000", midpoint = 0, limits = c(mmin, mmax)) +
-    theme_classic()+theme(panel.grid.major = element_line(colour = "white"),
-          panel.background = element_rect(fill = "white", colour = NA),axis.title = element_blank(),
-          legend.title = element_blank(), legend.position = "bottom")
+    theme_classic()+
+    theme(panel.grid.major = element_line(colour = "white"),
+    panel.background = element_rect(fill = "white", colour = NA),axis.title = element_blank(),
+    legend.title = element_blank(), legend.position = "bottom")
 
   #p=ggplot(data = loc.sf)+geom_sf(aes_string(fill="Effect"),alpha=0.8,col="lightgrey")+ geom_sf(size=0.8)
 
@@ -53,17 +74,23 @@ plotBsiland.land=function(x,land,data,var=1,landviz=F)
   }
   else
   {
+
    parsf=st_intersects(loc.sf,landsf)
+
    parsf=landsf[unlist(parsf),]
    bufparsf=st_buffer(parsf,distb)
    bufparsf$Effect=data[,nbd]*param
 
-   p=ggplot(bufparsf)+geom_sf(data=bufparsf,aes_string(fill="Effect"),alpha=0.8,col="lightgrey")+
+
+   p=ggplot(data=loc.sf)+
+     geom_sf(data=bufparsf,aes_string(fill="Effect"),alpha=0.8,col="lightgrey")+
+     geom_sf(size=0.8)+
      geom_sf(data=parsf,col="lightgrey",fill="white")+
+     coord_sf(crs=st_crs(landsf),datum=st_crs(landsf))+
      scale_fill_gradient2(low = "#0000FF", mid = "white", high = "#CC0000", midpoint = 0, limits = c(mmin, mmax)) +
      theme(panel.grid.major = element_line(colour = "white"),
-           panel.background = element_rect(fill = "white", colour = NA),axis.title = element_blank(),
-           legend.title = element_blank(), legend.position = "bottom")
+     panel.background = element_rect(fill = "white", colour = NA),axis.title = element_blank(),
+     legend.title = element_blank(), legend.position = "bottom")
 
   }
   if (landviz==T)

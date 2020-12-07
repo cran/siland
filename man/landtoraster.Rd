@@ -49,16 +49,20 @@ O. Martin
 ##---- Should be DIRECTLY executable !! ----
 ##-- ==>  Define data, use random,
 ##--	or do  help(data=index)  for the standard data sets.
-%\donttest{
+\donttest{
 data(dataSiland)
 data(landSiland)
 head(dataSiland)
 head(landSiland)
-u1=landtoraster(landSiland,c("L1","L2"),wd=100)
+u1=landtoraster(landSiland,c("L1","L2"),wd=20)
 names(u1)
-head(u1[[1]])
+plot(u1[[1]][,c("X","Y")],pch=".")
+u2=landtoraster(landSiland,c("L1","L2"),wd=20,data=dataSiland)
+points(u2[[1]][,c("X","Y")],pch=".",col=2)
+points(dataSiland[,c("X","Y")],pch=16,cex=0.6,col=3)
 
-%}
+
+}
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

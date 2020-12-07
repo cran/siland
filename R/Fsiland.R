@@ -82,21 +82,15 @@ Fsiland<-function(formula,land,data,family="gaussian",sif="exponential",init=100
   localvars=allvars[allvars%in%datanames]
   landvars=allvars[allvars%in%landnames]
 
-  mess.1="Local variables:"
-  mess.2=paste(localvars,collapse = " ")
-  message(paste(mess.1,mess.2,sep=" "))
-  #cat("Local variables: ")
-  #cat(paste(localvars,sep=" "))
-  #cat("\n")
+  cat("Local variables: ")
+  cat(paste(localvars,sep=" "))
+  cat("\n")
   #extract landscape variables
   if(length(landvars)==0)
     stop("No landscape variable in the model")
-  mess.1="Landscape variables:"
-  mess.2=paste(landvars,collapse=" ")
-  message(paste(mess.1,mess.2,sep=" "))
-  #cat("Landscape variables: ")
-  #cat(paste(landvars,sep=" "))
-  #cat("\n")
+  cat("Landscape variables: ")
+  cat(paste(landvars,sep=" "))
+  cat("\n")
 
 
  # if(length(localvars)==0)
@@ -154,13 +148,30 @@ Fsiland<-function(formula,land,data,family="gaussian",sif="exponential",init=100
 
 
   #transform dataframe data in sf object
+  #transform dataframe data in sf object
+  #and set crs
+  crsinit=st_crs(sfGIS[[1]])
+  if(is.na(crsinit))
+  {
+    st_crs(sfGIS[[1]])<-2154
+  }
+
   loc.sf=list(NULL)
   for(i in 1:length(data))
   {
     tmp=data[[i]][,c("X","Y")]
     loc.sf[[i]]=st_as_sf(tmp,coords = c("X","Y"))
-    st_crs(loc.sf[[i]])<-st_crs(sfGIS[[i]])$proj4string
+    st_crs(loc.sf[[i]])<-st_crs(sfGIS[[i]])
+    if(st_is_longlat(sfGIS[[i]]))
+    {
+      loc.sf[[i]]=st_transform(loc.sf[[i]],2154)
+      sfGIS[[i]]=st_transform(sfGIS[[i]],2154)
+    }
   }
+
+
+
+
 
 
 
@@ -226,9 +237,9 @@ Fsiland<-function(formula,land,data,family="gaussian",sif="exponential",init=100
   {
     resoptim=optimize(myfun,interval=c(0,6000))
     resoptim$par=resoptim$minimum
-    #options(warn=-1)
+    options(warn=-1)
 	#resoptim=optim(init,myfun,method="Brent",lower=1,upper=2000)
-	#options(warn=0)
+	options(warn=0)
   }
 
   paramSIF=resoptim$par
@@ -306,7 +317,7 @@ Fsiland<-function(formula,land,data,family="gaussian",sif="exponential",init=100
 
   if(sum(paramSIF<(3*wd)))
   {
-    warning("\nIt is recommended that wd is three times smaller than the estimated SIF mean distance. A new estimation with smaller wd should be more appropriate (see argument wd in Fsiland).")
+    warning("\nIt is recommended that wd is three times smaller than the estimated SIF mean distance. \nA new estimation with smaller wd should be more appropriate (see argument wd in Fsiland).")
   }
 
 

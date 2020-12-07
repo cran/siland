@@ -14,8 +14,7 @@ vignette: >
 ---
 
 ```{r echo = FALSE, message = FALSE}
-knitr::opts_chunk$set(collapse=T,
-                      cache=F,eval=T)
+knitr::opts_chunk$set(collapse=T,cache=F,eval=T)
 #
 #knitr::opts_chunk$set(eval = FALSE)
 # options(width = 120, max.print = 100)
@@ -35,8 +34,7 @@ Two methods are available which enable to estimate effect intensities but also t
 
 It is worth noting that the both methods simultaneously estimate intensities of effect and scales of effect using a numerical likelihood maximisation procedure. This means that the buffers radii (Bsiland) or the mean distances of the SIFs (Fsiland) are not given by the user but estimated for each landscape variable.
 
-_siland_ package is designed to be a user-friendly tool: data format are commonly used (data.frame and shape files from GIS data), model expression is simple (classical formula as lm expression), various outputs are very easily computed: summary of estimates and tests, graphical maps of effects and graphical checking of likelihood maximisation. Based on linear model, it includes numerous extensions of linear model: interactions, random effects, GLM (binomial and poisson). It is also possible to build multiannual model. We detailed hereafter some examples of simple use of the _siland_ package. (More details about the method can be found in https://www.biorxiv.org/content/10.1101/692566v1. Package development on https://github.com/silandpackage/siland)
-
+_siland_ package is designed to be a user-friendly tool: data format are commonly used (data.frame and shape files from GIS data), model expression is simple (classical formula as lm expression), various outputs are very easily computed: summary of estimates and tests, graphical maps of effects and graphical checking of likelihood maximisation. Based on linear model, it includes numerous extensions of linear model: interactions, random effects, GLM (binomial and poisson). It is also possible to build multiannual model. We detailed hereafter some examples of simple use of the _siland_ package. (More details about the method can be found in https://www.biorxiv.org/content/10.1101/692566v1. 
 
 
 ## A first example
@@ -60,9 +58,9 @@ data(dataSiland)
 data(landSiland)
 ```
 
-Main results for this example have been saved in object resVignette and can be loaded to avoid computing time.
+Main results for this example have been saved in object VignetteSiland and can be loaded to avoid computing time.
 ```{r,eval=T}
-data(list=c("likresB1","resB1","resB2","resB3","resF1","resF3","resF4","resF5-1","resF5-2","resY"))
+data("likresB1","resB1","resB2","resB3","resF1","resF3","resF4","resF5.1","resF5.2","resY")
 ```
 
 _dataSiland_ is a data.frame with columns: "obs", variable of interest and "x1" variable, a continuous local variable.
@@ -174,7 +172,7 @@ resF1=Fsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland)
 resF1
 summary(resF1)
 ```
-Here the parameters related to the landscape variable L1 are intensity `L1` (-11.644) and the mean distance of its SIF, `SIF.L1` (111.189). The vector `resF1$SIF`  gives for each landscape variable the mean distance of estimated SIFs. The data.frame `resF1$landcontri` gives for each landscape variable, the cumulative spatial influence received by each observation (i.e. the sum of spatial influence received by each observation from all cells of the landscape).
+Here the parameters related to the landscape variable L1 are intensity `L1` (-11.957) and the mean distance of its SIF, `SIF.L1` (113.4894). The vector `resF1$SIF`  gives for each landscape variable the mean distance of estimated SIFs. The data.frame `resF1$landcontri` gives for each landscape variable, the cumulative spatial influence received by each observation (i.e. the sum of spatial influence received by each observation from all cells of the landscape).
 
 The command `plotFsiland.sif` gives a representation of the estimated SIF for each landscape variable.
 ```{r fig.align='center',fig.width=7,eval=T}
@@ -304,6 +302,7 @@ head(dataSilandY2)
 dataSilandY=list(dataSilandY1,dataSilandY2)
 resY=Bsiland(obs~year+x1+L1+L2, land = landSilandY,data=dataSilandY)
 ```
+
 ```{r eval=T}
 resY
 summary(resY)
