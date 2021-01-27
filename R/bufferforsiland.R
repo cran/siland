@@ -73,8 +73,8 @@ bufferforsiland<-function(d,sfGIS,loc.sf,landnames,border=F)
 
     #currentland is the landscape for variable k
     currentland=st_make_valid(st_geometry(sfGIS[unlist(sfGIS[landnames[k]]) ==1,]))
-if(sum(st_is_empty(currentland))>0 )
-  stop("stop empty 2")
+#if(sum(st_is_empty(currentland))>0 )
+  #stop("stop empty 2")
     #listArea gives the area for variable k and for the buffers in list ll
     listArea=lapply(ll,function(x){uu=st_intersection(x,currentland)
                                   res=as.numeric(sum(st_area(uu)))

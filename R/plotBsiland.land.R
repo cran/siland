@@ -1,4 +1,4 @@
-plotBsiland.land=function(x,land,data,var=1,landviz=F)
+plotBsiland.land=function(x,land,data,var=1,landviz=T)
 {
   if(class(x)!="Bsiland")
     stop("Argument x have to be an object of class Bsiland")

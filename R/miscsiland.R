@@ -71,7 +71,7 @@ summary.Fsiland<-function(object,...)
   cat("SIF parameters:\n")
   print(round(x$paramSIF,4))
   cat("\n")
-  cat("-- Tests are given conditionnaly to the best SIF parameters --" )
+  cat("-- Tests are given conditionally to the best SIF parameters --" )
   cat("\n")
   print(summaryx)
 

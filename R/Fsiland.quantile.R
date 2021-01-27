@@ -13,7 +13,7 @@ Fsiland.quantile<-function(x,p=0.95)
   coefsif=x$coefficients[namesLand]
   namesSIF=paste("SIF.",namesLand,sep="")
   valsif=x$coefficients[namesSIF]
-  
+
   resq=matrix(0,ncol=length(p),nrow=length(valsif))
   for(i in 1:length(valsif))
   for(j in 1:length(p))
@@ -22,10 +22,11 @@ Fsiland.quantile<-function(x,p=0.95)
         resq[i,j]=quantileE(p[j],valsif[i])
       if(sif=="gaussian")
         resq[i,j]=quantileG(p[j],valsif[i])
+      if(sif=="uniform")
+        resq[i,j]=quantileU(p[j],valsif[i])
     }
     #resq=cbind(valsif,resq)
     colnames(resq)=as.character(p)
     rownames(resq)=namesSIF
     return(resq)
   }
-  

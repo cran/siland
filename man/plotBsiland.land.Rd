@@ -5,10 +5,10 @@
 Map of Bsiland result
 }
 \description{
-Function creating a map of Bsiland result, i.e. buffers estimations for each landscape variable. 
+Function creating a map of Bsiland result, i.e. buffers estimations for each landscape variable.
 }
 \usage{
-plotBsiland.land(x, land, data, var = 1,landviz=F )
+plotBsiland.land(x, land, data, var = 1,landviz=T )
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -22,7 +22,7 @@ the object of class sf describing the landscape variable, i.e. the \command{land
 the dataframe describing response variable and the local variables, i.e. the  \command{data} argument in the call to the Bsiland function that computed \command{x}.
 }
   \item{var}{
-  a vector containing the numbers (numeric) of the mapped landscape variables. 
+  a vector containing the numbers (numeric) of the mapped landscape variables.
 }
   \item{landviz}{
 If landviz=T (by default), polygons where the variable \command{var} is observed are colored in gray.
@@ -32,7 +32,7 @@ If landviz=T (by default), polygons where the variable \command{var} is observed
 }
 
 \value{
-a ggplot of class of the landscape effect estimated in the \command{Bsiland} object x i.e. a map of buffers. 
+a ggplot of class of the landscape effect estimated in the \command{Bsiland} object x i.e. a map of buffers.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
