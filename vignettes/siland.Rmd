@@ -25,16 +25,13 @@ knitr::opts_chunk$set(collapse=T,cache=F,eval=T)
 
 ## Introduction
 
-The package _siland_ aims to estimate the effects of landscape and local variables on a measurement of interest. 
-Two methods are available which enable to estimate effect intensities but also the scale of the effect for landscape variables, without any a priori. 
+The package _siland_ aims to estimate the effects of landscape and local variables on a measurement of interest. The method enable to estimate effect intensities but also the scale of the effect for landscape variables, without any a priori. 
+The method is based on estimation of Spatial Influence Function (SIF).The SIF function describes how the influence of a pixel/cell of a landscape variable is spatially distributed. We assume that the influence is maximal at the pixel location and decreases with the distance. The decrease is parametrised by one parameter which corresponds to the mean  distance for the SIF. 
 
-* The first one is based on buffer computed around location of observed data (`Bsiland `). 
+It is worth noting that the method simultaneously estimate intensities of effect and scales of effect using a numerical likelihood maximisation procedure. This means that the mean distances of the SIFs are not given by the user but estimated for each landscape variable.
 
-* The second one (`Fsiland`) is based on estimation of Spatial Influence Function (SIF).The SIF function describes how the influence of a pixel/cell of a landscape variable is spatially distributed. We assume that the influence is maximal at the pixel location and decreases with the distance.  
+_siland_ package is designed to be a user-friendly tool: data format are commonly used (data.frame and shape files from GIS data), model expression is simple (classical formula as lm expression), various outputs are very easily computed: summary of estimates and tests, graphical maps of effects and graphical checking of likelihood maximisation. Based on linear model, it includes numerous extensions of linear model: interactions, random effects, GLM (binomial and poisson). It is also possible to build multiannual model. We detailed hereafter some examples of simple use of the _siland_ package. (More details about the method can be found in https://www.biorxiv.org/content/10.1101/692566v1).
 
-It is worth noting that the both methods simultaneously estimate intensities of effect and scales of effect using a numerical likelihood maximisation procedure. This means that the buffers radii (Bsiland) or the mean distances of the SIFs (Fsiland) are not given by the user but estimated for each landscape variable.
-
-_siland_ package is designed to be a user-friendly tool: data format are commonly used (data.frame and shape files from GIS data), model expression is simple (classical formula as lm expression), various outputs are very easily computed: summary of estimates and tests, graphical maps of effects and graphical checking of likelihood maximisation. Based on linear model, it includes numerous extensions of linear model: interactions, random effects, GLM (binomial and poisson). It is also possible to build multiannual model. We detailed hereafter some examples of simple use of the _siland_ package. (More details about the method can be found in https://www.biorxiv.org/content/10.1101/692566v1. 
 
 
 ## A first example
@@ -58,10 +55,8 @@ data(dataSiland)
 data(landSiland)
 ```
 
-Main results for this example have been saved in object VignetteSiland and can be loaded to avoid computing time.
-```{r,eval=T}
-data("likresB1","resB1","resB2","resB3","resF1","resF3","resF4","resF5.1","resF5.2","resY")
-```
+
+
 
 _dataSiland_ is a data.frame with columns: "obs", variable of interest and "x1" variable, a continuous local variable.
 The "Id" column indicates the identification number of the plots where observations were made.
@@ -90,217 +85,135 @@ ggplot(landSiland)+
 
 
 
-### Buffer approach : Bsiland()
+### Spatial Influence Function approach : `siland()`
 
-### Classical disks buffers (point observations)
+Estimations for landscape and local variables are based on discretization with cells (or pixels) of the landscape. This discretization is called a raster. Each unit (cell/pixel) of landscape variable  has an influence which is maximal at its location and decreases as the distance increases. The decrease of this influence is described by a spatial influence function (SIF). For modelling a given landscape variable influence, we consider every cell where the landscape variable is distributed, and computed its influence by summing spatial influence of all cells. The spatial influence of a cell is determined by its intensity (negative or positive) and its SIF, which is a density function described by its mean distance (in _siland_ package). The _siland_ package allows to estimate  the intensity of effect and the scale of effects i.e. here the mean distance of SIF. 
+Estimating effects of the local variable x1 and landscape variables L1 and L2 on the variable of interest obs can be done with the command `siland()` (the argument `wd` is presented below):
 
-Buffer approach modelizes effect of lanscape variable with a constant intensity on a buffer (i.e. an area of constant radius) around the observation location. Estimating effects of the local variable x1 and landscape variables L1 and L2 on the variable of interest obs can be done with the command `Bsiland()`:
-
-```{r eval=F}
-resB1=Bsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland)
+```{r eval=T}
+res=siland(obs~x1+L1+L2,land=landSiland,data=dataSiland,wd=30)
 ```
-```{r eval=T }
-resB1
+```{r eval=T}
+res
+
 ```
-Coefficients are the parameter estimates. For a landscape variable, there are two values : for instance for L1, `L1` (-11.068) is the intensity of the effect and `B.L1` ( 121.179) is the estimated buffer size for L1. `AIC` is AIC the  of the model resB1 (Model: obs ~ x1 + L1 + L2) and `AIC(no landscape)` is the AIC with only local variable (Model0: obs ~ x1). ` (No landscape effect) p-value` is related to the test of landscape global effect significativity, i.e. H0= 'Model0: obs ~ x1' vs H1='Model: obs ~ x1 + L1 + L2' (Likelihood ratio test).
+Here the parameters related to the landscape variable L1 are intensity `L1` (-11.644) and the mean distance of its SIF, `SIF.L1` (111.189). The vector `res$paramSIF`  gives for each landscape variable the mean distance of estimated SIFs. The data.frame `res$landcontri` gives for each landscape variable, the cumulative spatial influence received by each observation (i.e. the sum of spatial influence received by each observation from all cells of the landscape). AIC` is AIC the  of the model resB1 (Model: obs ~ x1 + L1 + L2) and `AIC(no landscape)` is the AIC with only local variable (Model0: obs ~ x1). ` (No landscape effect) p-value` is related to the test of landscape global effect significativity, i.e. H0= 'Model0: obs ~ x1' vs H1='Model: obs ~ x1 + L1 + L2' (Likelihood ratio test).
 
 
 Parameter estimates and tests can be obtained using the command `summary`:
 ```{r eval=T}
-summary(resB1)
+summary(res)
 ```
-Note that p.values are given conditionnaly to estimates of buffer radii.  
+Note that p.values are given conditionally to estimated parameters for SIFs.  
 
 
-`resB1$parambuffer` gives the vector of estimated buffers radii.
-`resB1$buffer` gives a data.frame of the percentages of each landscape variable (in columns) in buffers of estimated radii for each observation (in rows).
-
-```{r eval=T }
-resB1$parambuffer
-```
-
-The `plotBsiland.land()` function gives a graphical representation of the estimation. 
-The color intensity is the effect of the landscape variable i.e. the product of the occupancy percentage of the landscape variable in the buffer by the associated coeffcient. 
+The command `plotsiland.sif` gives a representation of the estimated SIF for landscape variables. The shape of the SIF could be "exponential", "gaussian" or "uniform". The shape can be defined with the argument sif in the function `siland()` and is exponential by default. The function `plotsiland.sif()` allows to displays the estimated SIFs.
 
 ```{r fig.align='center',fig.width=7,eval=T}
-plotBsiland.land(x=resB1,land=landSiland,data=dataSiland)
-
-plotBsiland.land(x=resB1,land=landSiland,data=dataSiland,var=2)
+plotsiland.sif(res)
 ```
 
-
-
-#### "Doughnut" buffers (polygonal observations)
-
-In function `Bsiland`, the argument `border=F` (by default) indicates that buffers are computed from the observations locations. Buffers are thus a circle of constant radius centered on observation locations.  
-The option `border=T` indicates that buffers are computed from the border of the polygon (observation plot) where observations are made. Then the buffers look much more like "doughnuts", with an empty area in the center. 
-
-```{r fig.align='center',fig.width=7,eval=F}
-resB2=Bsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland,family=gaussian,border=T)
-```
-```{r fig.align=T,fig.width=7,eval=F}
-resB2$parambuffer
-plotBsiland.land(x=resB2,land=landSiland,data=dataSiland)
-plotBsiland.land(x=resB2,land=landSiland,data=dataSiland,var=2)
-```
-
-
-
-#### Visual check of likelihood maximisation procedure.
-As with all numerical maximisation procedures, optimization problems may arise. The function `Bsiland.lik()` allows to point out possible problems of optimization.
-```{r fig.align='center',fig.width=7,eval=F}
-likresB1=Bsiland.lik(resB1,land= landSiland,data=dataSiland,varnames=c("L1","L2"))
-```
-```{r fig.align='center',fig.width=7,eval=T}
-likresB1
-```
-
-On this graphic, the -Log-likelihood is represented in function of buffer radii. The estimation is made by maximazing the likelihood i.e. by minimizing the -Log-likelihood. The orange line indicates the minimal value obtained during the estimation. 
-The black line represents the -loglikelihood for L1 when the buffer radius for L1 is set to given values in seqd argument (`seqd=seq(2,200,length=10)`) and the other parameters are fixed to their estimation. The black dotted line indicates the value of L1 buffer size estimated during the global estimation procedure. The red continuous and dotted red lines simirlarly indicates the -loglikelihood and the value of buffer size estimated for L2. When minization correctly occurs, the minimal values of the profiled -loglikelihoods are equal and equal the minimal value of the global -Log-likelihood. This means that the minimums of continuous black and red lines are on the orange line (and that dotted black and red lines intersect the continuous black and red lines at their minimum, respectively). If it is not the case, the minimizing procedure has failed and it is necessary to proceed with a new estimation with different initialisation values. This is possible using the argument `init` in function `Bsiland`. For instance, for starting estimation from buffer sizes of 20 and 150 for L1 and L2 landscape variables, respectively, use the command `Bsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland,init=c(20,150))`.
-
-
-### Spatial Influence Function approach : Fsiland()
-
-
-In the Spatial Influence Function (SIF) approach, each unit of landscape variable (cell/pixel) has an influence which is maximal at its location and decreases as the distance increases. For modelling a given landscape variable influence, we consider every cell where the landscape variable is distributed, and computed its influence by summing spatial influence of all cells. The spatial influence of a cell is determined by its intensity (negative or positive) and its SIF, which is a density function described by its mean distance (in _siland_ package). As for the buffer approach, the _siland_ package allows to estimate  the intensity of effect and the scale of effects i.e. here the mean distance of SIF. 
-Estimating effects of the local variable x1 and landscape variables L1 and L2 on the variable of interest obs can be done with the command `Fsiland()` in a similar syntax than for Bsiland :
-
-```{r eval=F}
-resF1=Fsiland(obs~x1+L1+L2,land=landSiland,data=dataSiland)
-```
-```{r eval=T}
-resF1
-summary(resF1)
-```
-Here the parameters related to the landscape variable L1 are intensity `L1` (-11.957) and the mean distance of its SIF, `SIF.L1` (113.4894). The vector `resF1$SIF`  gives for each landscape variable the mean distance of estimated SIFs. The data.frame `resF1$landcontri` gives for each landscape variable, the cumulative spatial influence received by each observation (i.e. the sum of spatial influence received by each observation from all cells of the landscape).
-
-The command `plotFsiland.sif` gives a representation of the estimated SIF for each landscape variable.
-```{r fig.align='center',fig.width=7,eval=T}
-plotFsiland.sif(resF1)
-```
-
-The command `plotFsiland.land` gives map of effects of the landscape. 
+The command `plotsiland.land` gives map of effects of the landscape. 
 By default, it gives the global contribution of all landscape variables:
 ```{r fig.align='center',fig.width=7,eval=F}
-plotFsiland.land(x=resF1,land=landSiland,data=dataSiland)
+plotsiland.land(x=res,land=landSiland,data=dataSiland)
 ```
 
 
 One can obtain a map for a specific landscape variable by specifying its number with the argument `var`:
-```{r fig.align='center',fig.width=7,eval=F}
-plotFsiland.land(x=resF1,land=landSiland,data=dataSiland,var=2)
-```
-
-
-#### Fsiland() arguments 
-
-
-
-* The argument `wd` indicates the mesh size used to construct spatial unit (cells/pixels) of landscape variable. In fact, lanscape variable described as polygon are discretized on grid during the procedure estimation (like raster). The choice of wd is a tradeoff between computing precision and computing time (and memory size). The smallest `wd` is, the better are the precision but the longer the computing time is (and the larger the required memory size is). It is worth to note that estimated parameters can be very sensitive to this mesh size. **To obtain a reliable estimation, we recommand to ensure, after the estimation procedure, that `wd` size is at least three times smaller than the smallest estimated SIF.** If not, it is recommended to proceed with a new estimation with a smaller `wd` size.
-
-
-*  The argument `border` indicates whether an observation receives the spatial influence of cells belonging to the same plot (i.e. the plot where the observation was made). If `border=T`, its receives influence only from the border of the plot (so no influence from the cells of the plot). By default, `border = F` (all cells are considered). 
-
-
-
-* The argument `sif` defines the family function of SIF, i.e. the form of decrease for the landscape influence. The family can be `exponential`, `gaussian`, or `uniform`. If influence is uniform, it implies that there is no decrease of inlfuence and influence is uniform around each pixel of the raster. Note that all landscape variables have the same form. 
-
-
-### Comparison between Fsiland() and Bsiland()
-
-Buffer approach modelizes landscape effect from the observation location whereas SIF approach modelizes landscape from the lanscape variables locations. These difference of point of view made difficult to compare the estimated results directly. It is possible to compare the landscape effect received by each observation, named hereafter (landscape) contribution, estimated by the both models.
-
 ```{r fig.align='center',fig.width=7,eval=T}
-
-resB1$parambuffer
-resF1$paramSIF
-plot(resB1$buffer[,1],resF1$landcontri[,1],xlab="Buffer contribution",ylab="FIS contribution", main="Variable L1")
-abline(0,1)
-plot(resB1$buffer[,2],resF1$landcontri[,2],xlab="Buffer contribution",ylab="FIS contribution", main="Variable L2")
-abline(0,1)
+plotsiland.land(x=res,land=landSiland,data=dataSiland,var=2)
 ```
 
-To compare models adequacy to data, one can compare their AIC (the smaller the better) : 
-```{r}
-resB1$AIC
-resF1$AIC
+#### Visual check of likelihood maximisation procedure.
+As with all numerical maximization procedures, optimization problems may arise. The function `siland.lik()` allows to point out possible problems of optimization.
+```{r fig.align='center',fig.width=7,eval=T}
+likres=siland.lik(res,land= landSiland,data=dataSiland,varnames=c("L1","L2"))
+```
+```{r fig.align='center',fig.width=7,eval=T}
+likres
 ```
 
+On this graphic, the -Log-likelihood is represented in function of buffer radii. The estimation is made by maximazing the likelihood i.e. by minimizing the -Log-likelihood. The orange line indicates the minimal value obtained during the estimation. 
+The black line represents the -loglikelihood for L1 when the buffer radius for L1 is set to given values in seqd argument (`seqd=seq(2,200,length=10)`) and the other parameters are fixed to their estimation. The black dotted line indicates the value of L1 buffer size estimated during the global estimation procedure. The red continuous and dotted red lines simirlarly indicates the -loglikelihood and the value of buffer size estimated for L2. When minization correctly occurs, the minimal values of the profiled -loglikelihoods are equal and equal the minimal value of the global -Log-likelihood. This means that the minimums of continuous black and red lines are on the orange line (and that dotted black and red lines intersect the continuous black and red lines at their minimum, respectively). If it is not the case, the minimizing procedure has failed and it is necessary to proceed with a new estimation with different initialisation values. This is possible using the argument `init` in function `siland`. For instance, for starting estimation from buffer sizes of 20 and 150 for L1 and L2 landscape variables, respectively, use the command `siland(obs~x1+L1+L2,land=landSiland,data=dataSiland,init=c(20,150))`.
 
 
-## Model extensions 
+
+
+
+#### siland() arguments 
+
+* The argument `wd` indicates the mesh size used to construct spatial unit (cells/pixels) of landscape variable. In fact, landscape variable described as polygon are discretized on grid during the procedure estimation (like raster). The choice of wd is a tradeoff between computing precision and computing time (and memory size). The smallest `wd` is, the better are the precision but the longer the computing time is (and the larger the required memory size is). It is worth to note that estimated parameters can be very sensitive to this mesh size. **To obtain a reliable estimation, we recommand to ensure, after the estimation procedure, that `wd` size is at least three times smaller than the smallest estimated SIF.** If not, it is recommended to proceed with a new estimation with a smaller `wd` size.
+
+* The argument `maxD` corresponds to a radius. For each observation, only pixels with a distance less than maxD are used for estimation. For a given observation, pixels with a distance greater than maxD have in fact a very low intensity  and can be ignored. **To obtain a reliable estimation, we recommand to ensure, after the estimation procedure, that `maxD` size is at least three times greater than the greatest estimated SIF.**
+
+*  The argument `border` indicates whether an observation receives the spatial influence of cells belonging to the same plot (i.e. the plot where the observation was made). If `border=T`, its receives influence only from the border of the plot (so no influence from the cells of the plot). By default, `border = F` (all cells are considered). `border` is a vector that defines if `border` is True or False for each landscape variable. If `border=T` (resp. `border=F`) then the argument `border` is set to True (resp. False) for all landscape variables.
+
+* The argument `sif` defines the family function of SIF, i.e. the form of decrease for the landscape influence. The family can be `exponential`, `gaussian`, or `uniform`. If influence is uniform, it implies that there is no decrease of influence and influence is uniform around each pixel of the raster. Note that all landscape variables have the same form. 
+
 
 ### Mixed model 
 
 
 Random effect can be included using the syntax `(1|  )`. Note that only local effect are concerned. 
 
-```{r eval=F }
-resB3=Bsiland(obs~x1+L1+L2+(1|Id),land=landSiland,data=dataSiland)
+```{r eval=T }
+res2=siland(obs~x1+L1+L2+(1|Id),land=landSiland,data=dataSiland,wd=30)
 ```
 ```{r eval=T}
-summary(resB3)
-```
-```{r eval=F}
-resF3=Fsiland(obs~x1+L1+L2+(1|Id),land=landSiland,data=dataSiland)
-```
-```{r eval=T}
-summary(resF3)
+summary(res2)
 ```
 
+
 ### Non gaussian model 
-To consider distributions of the variable of interest that differ from Gaussian, use the option `family` available in the Bsiland and the Fsiland functions. Family can be "gaussian", "poisson" or "binomial" and the associated link function are identity, log and logit respectively.
+To consider distributions of the variable of interest that differ from Gaussian, use the option `family` available in the `siland()` function. Family can be "gaussian", "poisson" or "binomial" and the associated link function are identity, log and logit respectively.
 
 
 ### Model with interaction between local and landscape variables
 
-Interaction between local and landscape variables using the syntax `:` or `*` (as well as localxlocal interaction). Interaction term modify the intensity of a landscape variable according to the local variable value. But the scale of effect of the landscape variable remains constant (buffer size for Bsiland or SIF mean distance for Fsiland). 
-```{r eval=F}
+Interaction between local and landscape variables using the syntax `:` or `*` (as well as localxlocal interaction). Interaction term modify the intensity of a landscape variable according to the local variable value. But the scale of effect of the landscape variable remains constant.
+
+```{r eval=T}
 #Model with main and interaction effect
-resF4=Fsiland(obs~x1*L1+L2,land=landSiland,data=dataSiland)
+res3=siland(obs~x1*L1+L2,land=landSiland,data=dataSiland,wd=30)
 ```
 ```{r eval=T}
-resF4
+res3
 ```
-```{r eval=F }
-#Model with only interaction effect
-resF5.1=Fsiland(obs~x1:L1+L2,land=landSiland,data=dataSiland)
-```
-```{r eval=T}
-resF5.1
-```
-```{r eval=F }
-resF5.2=Fsiland(obs~x1:L1+L2,land=landSiland,data=dataSiland,wd=15)
+
+```{r eval=T }
+res3.1=siland(obs~x1*L1+L2,land=landSiland,data=dataSiland,wd=30)
 ```
 ```{r eval=T}
-resF5.2
+res3.1
 ```
-The same syntax can be applied with function Bsiland().
+
 
 ### Multiyear model and multisite model
 
-It is possible to deal with data observed during several years, i.e. data associated with several landscapes with the function `Bsiland` (this option is not implemented yet in Fsiland). 
+It is possible to deal with data observed during several years, i.e. data associated with several landscapes with the function `siland`. 
 The two data objects required are then : 
 *  a **list of ** data.frames of located observations, one for each year. An important point is that **data.frames column names have to be exactly the same and ordered in the same way.**
 *  a **list of ** sf object containing a landscape description of each year.
 
 
-
 Let us suppose we have two years of observations associated with two landscapes. Since the goal is only to show how to deal with such datasets,  we take the same datastets for observations and for landscapes for the two years.
 
-```{r eval=F}
+```{r eval=T}
 landSilandY1=landSiland
 landSilandY2=landSiland
 #landSilandY is a list with the landscape for each year
-landSilandY=list(landSilandY1,landSilandY2)
+landSilandY=list(year1=landSilandY1,year2=landSilandY2)
 dataSilandY1=dataSiland
 dataSilandY2=dataSiland
 dataSilandY1$year=factor("2018")
 dataSilandY2$year=factor("2019")
 head(dataSilandY1)
 head(dataSilandY2)
-dataSilandY=list(dataSilandY1,dataSilandY2)
-resY=Bsiland(obs~year+x1+L1+L2, land = landSilandY,data=dataSilandY)
+dataSilandY=list(year1=dataSilandY1,year2=dataSilandY2)
+#dataSilandY is a list with the observed data for each year
+resY=siland(obs~year+x1+L1+L2, land = landSilandY,data=dataSilandY,wd=30)
+resY
 ```
 
 ```{r eval=T}
@@ -314,22 +227,17 @@ It is possible to deal with multisite data, using the same procedure considering
 
 ## Remarks
 
-As for an object ot type GLM, functions AIC(), residuals() and fitted() are available. In fact, conditionnaly to the estimated buffers or SIFs, the fitted model  is a GLM or a LMM (Linear Mixed Model) or a GLMM (Generalized Linear Mixed Model). So after an estimation with Bsiland or `Fsiland()`, it is possible to analyse more precisely the estimated model with the object result stored in the output. Object result is an an object from glm() or lmer() or glmer() functions.
+As for an object ot type GLM, functions AIC(), residuals() and fitted() are available. In fact, conditionnaly to the estimated buffers or SIFs, the fitted model  is a GLM or a LMM (Linear Mixed Model) or a GLMM (Generalized Linear Mixed Model). So after an estimation, it is possible to analyse more precisely the estimated model with the object result stored in the output. Object result is an an object from glm() or lmer() or glmer() functions.
 
 ```{r eval=T }
-summary(resB1$result)
-BIC(resB1$result)
-fitted(resF1$result)[1:10]
-residuals(resF1$result)[1:10]
-class(resB1$result)
-class(resF1$result)
+summary(res$result)
+BIC(res$result)
+fitted(res$result)[1:10]
+residuals(res$result)[1:10]
+class(res$result)
+class(res$result)
 
 ```
 
-## Further developments
-
-* Function to deal with GIS raster files instead of shape files.
-* Estimated varoances for buffer sizes and SIF values.
-* Multiyear SIF approach
 
 

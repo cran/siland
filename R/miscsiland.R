@@ -4,7 +4,7 @@
 #		     Carpentier F.
 
 # Siland is free software; you can redistribute it and/or
-#modify it under the terms of the GNU General Public License
+#modify it under the terms of the GU General Public License
 #as published by the Free Software Foundation; either version 2
 #of the License, or (at your option) any later version.
 
@@ -18,7 +18,7 @@
 #Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
-print.Fsiland<-function(x,...){
+print.siland<-function(x,...){
   cat("Model: ")
   print(as.formula(x$formula),showEnv=F)
   cat("\n")
@@ -60,7 +60,7 @@ print.Fsiland<-function(x,...){
 
 
 
-summary.Fsiland<-function(object,...)
+summary.siland<-function(object,...)
 {
   #data farame summary
 
@@ -85,148 +85,10 @@ summary.Fsiland<-function(object,...)
 }
 
 
-calcdist=function(data,land)
-{
-  #compute distance between observation location of data
-  #and point source location of list land
-  tmp=data[,c("X","Y")]
-  Distobs=list()
-  p=length(land)
-  for(i in 1:p){
-    Distobs[[i]]=t(apply(tmp,1,function(x){sqrt((x[1]-land[[i]][,"X"])^2+(x[2]-land[[i]][,"Y"])^2)}))
-  }
-  names(Distobs)=paste("Dist",1:p,sep="")
-  return(Distobs)
-}
-
-
-calcscontri=function(distmoy,Distobs,w=1,sif="exponential")
-{
-  #compute contributions of sources that arise to each observation location.
-  p=length(Distobs)
-  n=nrow(Distobs[[1]])
-  if (length(distmoy)==1){distmoy=rep(distmoy,p)}
-  contri=list(NULL)
-  if(sif=="exponential")
-    for(i in 1:p) contri[[i]]= fdispE(Distobs[[i]],distmoy[i])
-
-  if(sif=="gaussian")
-    for(i in 1:p) contri[[i]]= fdispG(Distobs[[i]],distmoy[i])
-
-  if(sif=="uniform")
-    for(i in 1:p) contri[[i]]= fdispU(Distobs[[i]],distmoy[i])
-
-  scontri=matrix(0,ncol=p,nrow=n)
-  for(i in 1:p) scontri[,i]=apply(as.matrix(contri[[i]]),1,sum)
-
-  scontric=scontri*w^2
-
-  return(scontric)
-}
 
 
 
-FsilandMinusLoglik<-function(d,Dist,land,data,formula,sif,family)
-{
-  #options(warn=-1)
-#print(d)
-  #compute the minus loglikelihood for parameter
-  # of fis fucntion, that is the mean distance
-  #data are local observations
-  #land are list of landscape variables
-  for(i in 1:length(d))
-  {
-    if(d[i]<0)
-      {
-      mloglik=10^6
-      return(mloglik)
-    }
-    #if(d[i]>2000 )
-    #{
-    #  mloglik=10^6
-    #  return(mloglik)
-    #}
-  }
-  #w=min(dist(land[[1]][1:10,c("X","Y")]))
-  w=sqrt(abs(diff(sort(unique(land[[1]][,1]))[1:2])*diff(sort(unique(land[[1]][,2]))[1:2])))
 
-  #Dist=calcdist(data,land)
-  landcontri=calcscontri(distmoy=d,Distobs=Dist,sif=sif,w=w)
-  #print(d)
-
-  colnames(landcontri)=names(land)
-  newdata=cbind(data,landcontri)
-  if( inherits(rr <- try(glm(as.formula(formula),data=newdata,family=family), silent = TRUE), "try-error"))
-    mloglik= 10^6
-  else
-    mloglik=as.numeric(-logLik(rr))
- # options(warn=0)
-  invisible(return(mloglik))
-}
-
-FsilandMinusLoglikLMM<-function(d,Dist,land,data,formula,sif,family)
-{
-  options(warn=-1)
-  #compute the minus loglikelihood for parameter
-  # of fis fucntion, that is the mean distance
-  #data are local observations
-  #land are list of landscape variables
-  for(i in 1:length(d))
-  {
-    if(d[i]<0)
-    {
-      mloglik=10^6
-      return(mloglik)
-    }
-  }
-  #w=min(dist(land[[1]][1:10,c("X","Y")]))
-  w=sqrt(abs(diff(sort(unique(land[[1]][,1]))[1:2])*diff(sort(unique(land[[1]][,2]))[1:2])))
-
-  Dist=calcdist(data,land)
-  #landcontri=calcscontri(distmoy=d,Distobs=Dist,sif=sif,w=w)
-  landcontri=calcscontri(distmoy=d,Distobs=Dist,sif=sif,w=w)
-  colnames(landcontri)=names(land)
-  newdata=cbind(data,landcontri)
-  if( inherits(rr <- try(lmer(as.formula(formula),data=newdata,REML=F), silent = TRUE), "try-error"))
-    mloglik= 10^6
-  else
-    mloglik=as.numeric(-logLik(rr))
-
-  options(warn=0)
-
-  invisible(return(mloglik))
-}
-
-FsilandMinusLoglikGLMM<-function(d,Dist,land,data,formula,sif,family)
-{
-  options(warn=-1)
-  #compute the minus loglikelihood for parameter
-  # of fis fucntion, that is the mean distance
-  #data are local observations
-  #land are list of landscape variables
-  for(i in 1:length(d))
-  {
-    if(d[i]<0)
-    {
-      mloglik=10^6
-      return(mloglik)
-    }
-  }
-  #w=min(dist(land[[1]][1:10,c("X","Y")]))
-  w=sqrt(abs(diff(sort(unique(land[[1]][,1]))[1:2])*diff(sort(unique(land[[1]][,2]))[1:2])))
-
-  Dist=calcdist(data,land)
-  landcontri=calcscontri(distmoy=d,Distobs=Dist,sif=sif,w=w)
-  #landcontri=calcscontri(distmoy=d,Distobs=Dist,sif=sif)
-  colnames(landcontri)=names(land)
-  newdata=cbind(data,landcontri)
-  if( inherits(rr <- try(glmer(as.formula(formula),data=newdata,family=family), silent = TRUE), "try-error"))
-    mloglik= 10^6
-  else
-    mloglik=as.numeric(-logLik(rr))
-  options(warn=0)
-  invisible(return(mloglik))
-}
 
 
 

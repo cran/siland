@@ -8,7 +8,7 @@ Transformation of an sf object into raster
 Function transforming an object of class sf into raster (points grid) with \command{wd}, the pixel size of the raster. \command{landname} gives the variable names for which raster points have to be computed.
 }
 \usage{
-landtoraster(landgis, landname, wd, data = NULL)
+landtoraster(landgis, landname, wd)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -21,9 +21,7 @@ an object of class sf
   \item{wd}{
 numeric, pixels size of raster
 }
-  \item{data}{
-a dataframe with X and Y columns, locations.
-}
+
 
 }
 
@@ -54,12 +52,15 @@ data(dataSiland)
 data(landSiland)
 head(dataSiland)
 head(landSiland)
-u1=landtoraster(landSiland,c("L1","L2"),wd=20)
-names(u1)
-plot(u1[[1]][,c("X","Y")],pch=".")
-u2=landtoraster(landSiland,c("L1","L2"),wd=20,data=dataSiland)
-points(u2[[1]][,c("X","Y")],pch=".",col=2)
-points(dataSiland[,c("X","Y")],pch=16,cex=0.6,col=3)
+u=landtoraster(landSiland,c("L1","L2"),wd=20)
+names(u)
+du1=as.data.frame(raster::rasterToPoints(u[[1]]))
+du2=as.data.frame(raster::rasterToPoints(u[[2]]))
+plot(du1[,1:2],type="n")
+sel1=du1[,3]==1
+sel2=du2[,3]==1
+points(du1[sel1,c(1,2)],pch=".",col=1)
+points(du2[sel2,c(1,2)],pch=".",col=2)
 
 
 }

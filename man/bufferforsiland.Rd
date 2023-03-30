@@ -49,8 +49,8 @@ dataSiland[1:10,c("X","Y")]
 landSiland$L1
 landSiland$L2
 
-bufferforsiland(c(100,200),sfGIS=landSiland, loc.sf=dataSiland, landnames=c("L1","L2"))
-
+res=bufferforsiland(c(100,200),sfGIS=landSiland, loc.sf=dataSiland, landnames=c("L1","L2"))
+res
 }
 
 
